@@ -19,6 +19,6 @@ public interface DeviceManageMapper {
      * @param: Device
      * @return: int
      */
-    int insterDevice(Device Device);
+    int insertDevice(Device Device);
 
 }

@@ -31,26 +31,21 @@ public class DeviceManageServiceImpl implements DeviceManageService {
     private CacheService cacheService;
     @Autowired
     private AuthorizationService authorizationService;
-    private String mStrBaseUrl="https://"+ Constants.SERVER+":"+Constants.PORT;
+    private String mStrBaseUrl = "https://" + Constants.SERVER + ":" + Constants.PORT;
+
+    /**
+     * @Description 设备注册
+     * @author xiebifeng
+     * @date 2019/1/3 18:53
+     * @param: [appId, verifyCode, nodeId, endUserId, psk, timeout, isSecure]
+     * @return: java.util.Map<java.lang.String , java.lang.Object>
+     */
     @Override
-    public Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure)throws Exception {
-            mapHeader = cacheService.getObject("mapHeader", HashMap.class);
-            boolean flag;
-            if (mapHeader==null) {
-                String refreshToken = cacheService.getString("refreshToken");
-                if (null==refreshToken||"".equals(refreshToken) || refreshToken.length() == 0) {
-                    flag=authorizationService.getAccessToken();
-                } else {
-                    flag= authorizationService.refreshToken();
-                }
-                if (flag){
-                    mapHeader=cacheService.getObject("mapHeader", HashMap.class);
-                }
-            }
+    public Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure) throws Exception {
+        refreshToken();
         boolean bValidNodeId = checkParam(nodeId);
         boolean bValidVerifyCode = checkParam(verifyCode);
         if (!bValidNodeId && !bValidVerifyCode) {
-            //mLogPrinter.printlnAsError("Register Direct Device, All Param are NULL.");
             return null;
         } else if (!bValidNodeId) {
             nodeId = verifyCode;
@@ -67,7 +62,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         mParam.put("timeout", timeout);
         String strRequest = JsonUtil.jsonObj2Sting(mParam);
         // Send Request
-        HttpsUtil httpsUtil=new HttpsUtil();
+        HttpsUtil httpsUtil = new HttpsUtil();
         httpsUtil.initSSLConfigForTwoWay();
         String strResult = httpsUtil.doPostJsonForString(strUrlRegister, mapHeader, strRequest);
 
@@ -75,10 +70,9 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         Map<String, Object> mResult = new HashMap<String, Object>();
         mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
         if (mResult.get("error_code") != null) {
-            errorHandle(mResult);
             return mResult;
-        }else{
-            Device device=new Device();
+        } else {
+            Device device = new Device();
             device.setDeviceId(mResult.get("deviceId").toString());
             device.setPsk(mResult.get("psk").toString());
             device.setTimeout(Integer.parseInt(mResult.get("timeout").toString()));
@@ -90,24 +84,23 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         return mResult;
     }
 
-    boolean parseResultString(String strResult) throws Exception {
-        if (strResult == null || strResult.length() == 0) {
-            return true;
-        }
 
-        Map<String, Object> mResult = new HashMap<String, Object>();
-        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
-        if (mResult.get("error_code") != null) {
-            errorHandle(mResult);
-            return false;
-        } else {
-            return true;
+    private void refreshToken() throws java.io.IOException {
+        mapHeader = cacheService.getObject("mapHeader", HashMap.class);
+        boolean flag;
+        if (mapHeader == null) {
+            String refreshToken = cacheService.getString("refreshToken");
+            if (null == refreshToken || "".equals(refreshToken) || refreshToken.length() == 0) {
+                flag = authorizationService.getAccessToken();
+            } else {
+                flag = authorizationService.refreshToken();
+            }
+            if (flag) {
+                mapHeader = cacheService.getObject("mapHeader", HashMap.class);
+            }
         }
     }
-    void errorHandle(Map<String, Object> mResult) {
-        String strErrCode = mResult.get("error_code").toString();
-        String strErrDesc = mResult.get("error_desc").toString();
-    }
+
     boolean checkParam(String strParam) {
         if (strParam == null || strParam.length() == 0) {
             return false;

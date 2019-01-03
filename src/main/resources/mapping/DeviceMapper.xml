@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.telecommunication.dao.DeviceManageMapper">
+
+    <resultMap id="ArticleResult" type="com.telecommunication.model.Device">
+
+    </resultMap>
+
+    <insert id="insertDevice">
+        INSERT INTO device(device_id,timeout,psk,verify_code,update_time,create_time)
+        VALUES (#{deviceId},#{timeout},#{psk},#{verifyCode},#{updateTime},#{createTime})
+    </insert>
+
+
+</mapper>
