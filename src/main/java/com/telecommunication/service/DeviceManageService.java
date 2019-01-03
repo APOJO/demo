@@ -16,5 +16,17 @@ public interface DeviceManageService {
      * @param:
      * @return:
      */
-    Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure)throws Exception;
+    Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure) throws Exception;
+
+    /**
+     * @Description 刷新设备验证码
+     * @author xiebifeng
+     * @date 2019/1/3 19:06
+     * @param:
+     * @return:
+     */
+
+    Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId,String deviceId, Integer timeout) throws Exception;
+
+
 }

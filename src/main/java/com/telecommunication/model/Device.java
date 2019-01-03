@@ -14,6 +14,7 @@ public class Device implements Serializable {
     private Long id;
     private String deviceId;
     private String verifyCode;
+    private String nodeId;
     private Integer timeout;
     private String psk;
     private Date createTime;
@@ -73,5 +74,13 @@ public class Device implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 }

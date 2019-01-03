@@ -20,8 +20,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthorizationController {
     @Autowired
     private AuthorizationService service;
-    @RequestMapping(value = "/reg",method = RequestMethod.POST)
-    public Boolean getres(){
+
+    /**
+     * @Description 鉴权
+     * @author xiebifeng
+     * @date 2019/1/3 19:42
+     * @param: []
+     * @return: java.lang.Boolean
+     */
+    @RequestMapping(value = "/reg", method = RequestMethod.POST)
+    public Boolean reg() {
         return service.getAccessToken();
+    }
+
+    /**
+     * @Description 刷新验证
+     * @author xiebifeng
+     * @date 2019/1/3 19:42
+     * @param: []
+     * @return: java.lang.Boolean
+     */
+    @RequestMapping(value = "/refreshToken", method = RequestMethod.POST)
+    public Boolean refreshToken() {
+        return service.refreshToken();
     }
 }

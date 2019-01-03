@@ -68,11 +68,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
 
     public Boolean refreshToken(){
-        if (!checkParam(mStrRefreshToken)) {
-            return false;
-        }
-
-        String strUrl = "https://" + Constants.SERVER + ":" + Constants.PORT  + "iocm/app/sec/v1.1.0/refreshToken";
+        String strUrl = "https://" + Constants.SERVER + ":" + Constants.PORT  + "/iocm/app/sec/v1.1.0/refreshToken";
         Map<String, String> mParam = new HashMap<String, String>();
         mParam.put("appId", Constants.APPID);
         mParam.put("secret", Constants.APPSECRET);

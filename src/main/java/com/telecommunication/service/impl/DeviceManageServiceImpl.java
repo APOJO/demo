@@ -25,7 +25,6 @@ import java.util.Map;
 public class DeviceManageServiceImpl implements DeviceManageService {
     @Autowired
     private DeviceManageMapper deviceManageMapper;
-
     HashMap<String, String> mapHeader;
     @Autowired
     private CacheService cacheService;
@@ -38,7 +37,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      * @author xiebifeng
      * @date 2019/1/3 18:53
      * @param: [appId, verifyCode, nodeId, endUserId, psk, timeout, isSecure]
-     * @return: java.util.Map<java.lang.String , java.lang.Object>
+     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
      */
     @Override
     public Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure) throws Exception {
@@ -77,6 +76,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
             device.setPsk(mResult.get("psk").toString());
             device.setTimeout(Integer.parseInt(mResult.get("timeout").toString()));
             device.setVerifyCode(mResult.get("verifyCode").toString());
+            device.setNodeId(nodeId);
             device.setCreateTime(new Date());
             device.setUpdateTime(new Date());
             deviceManageMapper.insertDevice(device);
@@ -84,6 +84,43 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         return mResult;
     }
 
+    /**
+     * @Description 刷新验证码
+     * @author xiebifeng
+     * @date 2019/1/3 19:32
+     * @param: [verifyCode, nodeId, appId, deviceId, timeout]
+     * @return: java.util.Map<java.lang.String , java.lang.Object>
+     */
+    @Override
+    public Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId, String deviceId, Integer timeout) throws Exception {
+
+        refreshToken();
+        String strUrlRegister = mStrBaseUrl + "/ocm/app/reg/v1.1.0/deviceCredentials/" + deviceId;
+        // Param
+        Map<String, Object> mParam = new HashMap<String, Object>();
+        mParam.put("verifyCode", verifyCode);
+        mParam.put("nodeId", nodeId);
+        mParam.put("timeout", timeout);
+        mParam.put("appId", appId);
+        String strRequest = JsonUtil.jsonObj2Sting(mParam);
+        // Send Request
+        HttpsUtil httpsUtil = new HttpsUtil();
+        httpsUtil.initSSLConfigForTwoWay();
+        String strResult = httpsUtil.doPostJsonForString(strUrlRegister, mapHeader, strRequest);
+        Map<String, Object> mResult = new HashMap<String, Object>();
+        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
+        if (mResult.get("error_code") != null) {
+            return mResult;
+        } else {
+            Device device = deviceManageMapper.selectByDeviceId(deviceId);
+            device.setNodeId(mResult.get("nodeId").toString());
+            device.setTimeout(Integer.parseInt(mResult.get("timeout").toString()));
+            device.setVerifyCode(mResult.get("verifyCode").toString());
+            device.setUpdateTime(new Date());
+            deviceManageMapper.updateDevice(device);
+        }
+        return mResult;
+    }
 
     private void refreshToken() throws java.io.IOException {
         mapHeader = cacheService.getObject("mapHeader", HashMap.class);
