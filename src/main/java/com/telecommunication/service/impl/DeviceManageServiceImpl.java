@@ -95,7 +95,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
     public Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId, String deviceId, Integer timeout) throws Exception {
 
         refreshToken();
-        String strUrlRegister = mStrBaseUrl + "/ocm/app/reg/v1.1.0/deviceCredentials/" + deviceId;
+        String strUrlRegister = mStrBaseUrl + "/iocm/app/reg/v1.1.0/deviceCredentials/" + deviceId;
         // Param
         Map<String, Object> mParam = new HashMap<String, Object>();
         mParam.put("verifyCode", verifyCode);
@@ -106,7 +106,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         // Send Request
         HttpsUtil httpsUtil = new HttpsUtil();
         httpsUtil.initSSLConfigForTwoWay();
-        String strResult = httpsUtil.doPostJsonForString(strUrlRegister, mapHeader, strRequest);
+        String strResult = httpsUtil.doPutJsonForString(strUrlRegister, mapHeader, strRequest);
         Map<String, Object> mResult = new HashMap<String, Object>();
         mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
         if (mResult.get("error_code") != null) {
