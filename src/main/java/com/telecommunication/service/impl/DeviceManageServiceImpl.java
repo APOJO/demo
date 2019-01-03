@@ -2,6 +2,7 @@ package com.telecommunication.service.impl;
 
 import com.telecommunication.dao.DeviceManageMapper;
 import com.telecommunication.model.Constants;
+import com.telecommunication.model.Device;
 import com.telecommunication.service.AuthorizationService;
 import com.telecommunication.service.CacheService;
 import com.telecommunication.service.DeviceManageService;
@@ -10,6 +11,7 @@ import com.telecommunication.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,10 +76,17 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
         if (mResult.get("error_code") != null) {
             errorHandle(mResult);
-            return null;
+            return mResult;
+        }else{
+            Device device=new Device();
+            device.setDeviceId(mResult.get("deviceId").toString());
+            device.setPsk(mResult.get("psk").toString());
+            device.setTimeout(Integer.parseInt(mResult.get("timeout").toString()));
+            device.setVerifyCode(mResult.get("verifyCode").toString());
+            device.setCreateTime(new Date());
+            device.setUpdateTime(new Date());
+            deviceManageMapper.insertDevice(device);
         }
-
-        // Return Device ID
         return mResult;
     }
 
