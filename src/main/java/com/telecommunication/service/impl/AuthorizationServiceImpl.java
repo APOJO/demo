@@ -99,10 +99,5 @@ public class AuthorizationServiceImpl implements AuthorizationService {
        return false;
     }
 
-    boolean checkParam(String strParam) {
-        if (strParam == null || strParam.length() == 0) {
-            return false;
-        }
-        return true;
-    }
+   
 }
