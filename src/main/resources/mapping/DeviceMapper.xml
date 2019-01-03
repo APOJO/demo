@@ -12,7 +12,7 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
-    <select id="selectByDeviceId">
+    <select id="selectByDeviceId" resultMap="BaseResult">
     select * from device where device_id=${deviceId}
     </select>
 
