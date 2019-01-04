@@ -38,7 +38,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      * @author xiebifeng
      * @date 2019/1/3 18:53
      * @param: [appId, verifyCode, nodeId, endUserId, psk, timeout, isSecure]
-     * @return: java.util.Map<java.lang.String       ,       java.lang.Object>
+     * @return: java.util.Map<java.lang.String                               ,                               java.lang.Object>
      */
     @Override
     public Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure) throws Exception {
@@ -90,7 +90,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      * @author xiebifeng
      * @date 2019/1/3 19:32
      * @param: [verifyCode, nodeId, appId, deviceId, timeout]
-     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
+     * @return: java.util.Map<java.lang.String               ,               java.lang.Object>
      */
     @Override
     public Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId, String deviceId, Integer timeout) throws Exception {
@@ -128,7 +128,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      * @author xiebifeng
      * @date 2019/1/4 10:21
      * @param: [deviceId, appId, name, endUser, mute, manufacturerId, manufacturerName, deviceType, model, location, protocolType, deviceConfig, region, organization, timezone, isSecure, psk]
-     * @return: java.util.Map<java.lang.String , java.lang.Object>
+     * @return: java.util.Map<java.lang.String       ,       java.lang.Object>
      */
     @Override
     public Map<String, Object> updateDeviceInfo(String deviceId, String appId, String name, String endUser, Enum mute, String manufacturerId, String manufacturerName, String deviceType, String model, String location, String protocolType, DeviceConfigDTO deviceConfig, String region, String organization, String timezone, Boolean isSecure, String psk) throws Exception {
@@ -164,6 +164,56 @@ public class DeviceManageServiceImpl implements DeviceManageService {
             return mResult;
         } else {
 
+        }
+        return mResult;
+    }
+
+    /**
+     * @Description 删除设备
+     * @author xiebifeng
+     * @date 2019/1/4 11:34
+     * @param: [deviceId, appId]
+     * @return: java.util.Map<java.lang.String , java.lang.Object>
+     */
+    @Override
+    public Map<String, Object> deleteDevice(String deviceId, String appId) throws Exception {
+        refreshToken();
+        String strUrlRegister = mStrBaseUrl + "/iocm/app/dm/v1.4.0/devices/" + deviceId+"?appId="+appId+"&cascade={cascade}";
+        HttpsUtil httpsUtil = new HttpsUtil();
+        httpsUtil.initSSLConfigForTwoWay();
+        String strResult = httpsUtil.doDeleteForString(strUrlRegister, mapHeader);
+        Map<String, Object> mResult = new HashMap<String, Object>();
+        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
+        if (mResult.get("error_code") != null) {
+            return mResult;
+        } else {
+        Device device=deviceManageMapper.selectByDeviceId(deviceId);
+        if (device!=null){
+            int r=deviceManageMapper.deleteDeviceById(deviceId);
+            if (r>0){
+                mResult.put("deleteFromDB","true");
+            }else{
+                mResult.put("deleteFromDB","false");
+            }
+        }
+        }
+        return mResult;
+    }
+
+    @Override
+    public Map<String, Object> queryDeviceStatus(String deviceId, String appId) throws Exception {
+        refreshToken();
+        String strUrlRegister = mStrBaseUrl + "/iocm/app/reg/v1.1.0/deviceCredentials/" + deviceId+"?appId="+appId;
+        HttpsUtil httpsUtil = new HttpsUtil();
+        httpsUtil.initSSLConfigForTwoWay();
+        Map<String, String> mParam = new HashMap<String, String>();
+        mParam.put("deviceId", deviceId);
+        mParam.put("appId", appId);
+        String strResult = httpsUtil.doGetWithParasForString(strUrlRegister, mParam,mapHeader);
+        Map<String, Object> mResult = new HashMap<String, Object>();
+        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
+        if (mResult.get("error_code") != null) {
+            return mResult;
         }
         return mResult;
     }

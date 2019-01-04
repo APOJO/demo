@@ -48,5 +48,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-
+    <delete id="deleteDeviceById">
+        delete from device where device_id=#{deviceId}
+    </delete>
 </mapper>

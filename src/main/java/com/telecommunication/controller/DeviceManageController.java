@@ -29,7 +29,7 @@ public class DeviceManageController {
      * @author xiebifeng
      * @date 2019/1/4 10:17
      * @param: [appId, verifyCode, nodeId, endUserId, psk, timeout, isSecure]
-     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
+     * @return: java.util.Map<java.lang.String               ,               java.lang.Object>
      */
     @RequestMapping(value = "/reg", method = RequestMethod.POST)
     public Map<String, Object> regDevice(
@@ -51,7 +51,7 @@ public class DeviceManageController {
      * @author xiebifeng
      * @date 2019/1/4 10:18
      * @param: [verifyCode, nodeId, appId, deviceId, timeout]
-     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
+     * @return: java.util.Map<java.lang.String               ,               java.lang.Object>
      */
     @RequestMapping(value = "/updateVerifyCode", method = RequestMethod.PUT)
     public Map<String, Object> updateVerifyCode(@RequestParam(value = "verifyCode", required = false, defaultValue = "") String verifyCode,
@@ -69,7 +69,7 @@ public class DeviceManageController {
      * @author xiebifeng
      * @date 2019/1/4 10:18
      * @param: [deviceId, appId, name, endUser, mute, manufacturerId, manufacturerName, deviceType, model, location, protocolType, deviceConfig, region, organization, timezone, isSecure, psk]
-     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
+     * @return: java.util.Map<java.lang.String               ,               java.lang.Object>
      */
     @RequestMapping(value = "/updateDeviceInfo", method = RequestMethod.PUT)
     public Map<String, Object> updateDeviceInfo(@RequestParam(value = "deviceId", required = true, defaultValue = "") String deviceId,
@@ -93,5 +93,28 @@ public class DeviceManageController {
         return deviceManageService.updateDeviceInfo(deviceId, appId, name, endUser, mute, manufacturerId,
                 manufacturerName, deviceType, model, location, protocolType, deviceConfig, region, organization,
                 timezone, isSecure, psk);
+    }
+
+    /**
+     * @Description 删除设备
+     * @author xiebifeng
+     * @date 2019/1/4 11:47
+     * @param: [appId, deviceId]
+     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
+     */
+    @RequestMapping(value = "/deleteDevice", method = RequestMethod.DELETE)
+    public Map<String, Object> deleteDevice(@RequestParam(value = "appId", required = false, defaultValue = "") String appId,
+                                            @RequestParam(value = "deviceId", required = true, defaultValue = "") String deviceId
+
+    ) throws Exception {
+        return deviceManageService.deleteDevice(deviceId, appId);
+    }
+
+    @RequestMapping(value = "/queryDeviceStatus", method = RequestMethod.GET)
+    public Map<String, Object> queryDeviceStatus(@RequestParam(value = "appId", required = false, defaultValue = "") String appId,
+                                            @RequestParam(value = "deviceId", required = true, defaultValue = "") String deviceId
+
+    ) throws Exception {
+        return deviceManageService.queryDeviceStatus(deviceId, appId);
     }
 }

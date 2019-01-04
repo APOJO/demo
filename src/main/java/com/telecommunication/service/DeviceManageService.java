@@ -28,7 +28,7 @@ public interface DeviceManageService {
      * @return:
      */
 
-    Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId,String deviceId, Integer timeout) throws Exception;
+    Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId, String deviceId, Integer timeout) throws Exception;
 
     /**
      * @Description 修改设备信息
@@ -38,5 +38,25 @@ public interface DeviceManageService {
      * @return:
      */
 
-    Map<String, Object> updateDeviceInfo(String deviceId, String appId, String name, String endUser, Enum mute, String manufacturerId, String manufacturerName, String deviceType, String model, String location, String protocolType, DeviceConfigDTO deviceConfig, String region, String organization, String timezone, Boolean isSecure, String psk) throws  Exception;
+    Map<String, Object> updateDeviceInfo(String deviceId, String appId, String name, String endUser, Enum mute, String manufacturerId, String manufacturerName, String deviceType, String model, String location, String protocolType, DeviceConfigDTO deviceConfig, String region, String organization, String timezone, Boolean isSecure, String psk) throws Exception;
+
+    /**
+     * @Description 删除设备
+     * @author xiebifeng
+     * @date 2019/1/4 11:33
+     * @param:
+     * @return:
+     */
+
+    Map<String, Object> deleteDevice(String deviceId, String appId) throws Exception;
+
+    /**
+     * @Description 查询设备激活状态
+     * @author xiebifeng
+     * @date 2019/1/4 11:49
+     * @param:
+     * @return:
+     */
+
+    Map<String, Object> queryDeviceStatus(String deviceId, String appId) throws Exception;
 }

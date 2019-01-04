@@ -39,5 +39,15 @@ public interface DeviceManageMapper {
      * @return:
      */
 
-    void updateDevice(Device device);
+    int updateDevice(Device device);
+
+    /**
+     * @Description 删除设备
+     * @author xiebifeng
+     * @date 2019/1/4 11:41
+     * @param:
+     * @return:
+     */
+
+    int deleteDeviceById(String deviceId);
 }
