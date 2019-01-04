@@ -3,6 +3,7 @@ package com.telecommunication.service.impl;
 import com.telecommunication.dao.DeviceManageMapper;
 import com.telecommunication.model.Constants;
 import com.telecommunication.model.Device;
+import com.telecommunication.model.DeviceConfigDTO;
 import com.telecommunication.service.AuthorizationService;
 import com.telecommunication.service.CacheService;
 import com.telecommunication.service.DeviceManageService;
@@ -37,7 +38,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      * @author xiebifeng
      * @date 2019/1/3 18:53
      * @param: [appId, verifyCode, nodeId, endUserId, psk, timeout, isSecure]
-     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
+     * @return: java.util.Map<java.lang.String       ,       java.lang.Object>
      */
     @Override
     public Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure) throws Exception {
@@ -89,7 +90,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      * @author xiebifeng
      * @date 2019/1/3 19:32
      * @param: [verifyCode, nodeId, appId, deviceId, timeout]
-     * @return: java.util.Map<java.lang.String , java.lang.Object>
+     * @return: java.util.Map<java.lang.String   ,   java.lang.Object>
      */
     @Override
     public Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId, String deviceId, Integer timeout) throws Exception {
@@ -118,6 +119,51 @@ public class DeviceManageServiceImpl implements DeviceManageService {
             device.setVerifyCode(mResult.get("verifyCode").toString());
             device.setUpdateTime(new Date());
             deviceManageMapper.updateDevice(device);
+        }
+        return mResult;
+    }
+
+    /**
+     * @Description 设备信息更新
+     * @author xiebifeng
+     * @date 2019/1/4 10:21
+     * @param: [deviceId, appId, name, endUser, mute, manufacturerId, manufacturerName, deviceType, model, location, protocolType, deviceConfig, region, organization, timezone, isSecure, psk]
+     * @return: java.util.Map<java.lang.String , java.lang.Object>
+     */
+    @Override
+    public Map<String, Object> updateDeviceInfo(String deviceId, String appId, String name, String endUser, Enum mute, String manufacturerId, String manufacturerName, String deviceType, String model, String location, String protocolType, DeviceConfigDTO deviceConfig, String region, String organization, String timezone, Boolean isSecure, String psk) throws Exception {
+        refreshToken();
+        String strUrlRegister = mStrBaseUrl + "/iocm/app/dm/v1.4.0/devices/" + deviceId;
+        // Param
+        Map<String, Object> mParam = new HashMap<String, Object>();
+        mParam.put("deviceId", deviceId);
+        mParam.put("appId", appId);
+        mParam.put("name", name);
+        mParam.put("endUser", endUser);
+        mParam.put("mute", mute);
+        mParam.put("manufacturerId", manufacturerId);
+        mParam.put("manufacturerName", manufacturerName);
+        mParam.put("deviceType", deviceType);
+        mParam.put("model", model);
+        mParam.put("location", location);
+        mParam.put("protocolType", protocolType);
+        mParam.put("deviceConfig", deviceConfig);
+        mParam.put("region", region);
+        mParam.put("organization", organization);
+        mParam.put("timezone", timezone);
+        mParam.put("isSecure", isSecure);
+        mParam.put("psk", psk);
+        String strRequest = JsonUtil.jsonObj2Sting(mParam);
+        // Send Request
+        HttpsUtil httpsUtil = new HttpsUtil();
+        httpsUtil.initSSLConfigForTwoWay();
+        String strResult = httpsUtil.doPutJsonForString(strUrlRegister, mapHeader, strRequest);
+        Map<String, Object> mResult = new HashMap<String, Object>();
+        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
+        if (mResult.get("error_code") != null) {
+            return mResult;
+        } else {
+
         }
         return mResult;
     }

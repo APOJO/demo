@@ -1,5 +1,7 @@
 package com.telecommunication.service;
 
+import com.telecommunication.model.DeviceConfigDTO;
+
 import java.util.Map;
 
 /**
@@ -28,5 +30,13 @@ public interface DeviceManageService {
 
     Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId,String deviceId, Integer timeout) throws Exception;
 
+    /**
+     * @Description 修改设备信息
+     * @author xiebifeng
+     * @date 2019/1/4 10:16
+     * @param:
+     * @return:
+     */
 
+    Map<String, Object> updateDeviceInfo(String deviceId, String appId, String name, String endUser, Enum mute, String manufacturerId, String manufacturerName, String deviceType, String model, String location, String protocolType, DeviceConfigDTO deviceConfig, String region, String organization, String timezone, Boolean isSecure, String psk) throws  Exception;
 }
