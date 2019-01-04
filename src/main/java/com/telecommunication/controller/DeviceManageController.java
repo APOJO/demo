@@ -4,10 +4,7 @@ import com.telecommunication.model.DeviceConfigDTO;
 import com.telecommunication.service.DeviceManageService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -76,14 +73,14 @@ public class DeviceManageController {
                                                 @RequestParam(value = "appId", required = false, defaultValue = "") String appId,
                                                 @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                                 @RequestParam(value = "endUser", required = false) String endUser,
-                                                @RequestParam(value = "mute", required = false, defaultValue = "") Enum mute,
+                                                 Enum mute,
                                                 @RequestParam(value = "manufacturerId", required = false, defaultValue = "") String manufacturerId,
                                                 @RequestParam(value = "manufacturerName", required = false, defaultValue = "") String manufacturerName,
                                                 @RequestParam(value = "deviceType", required = false, defaultValue = "") String deviceType,
                                                 @RequestParam(value = "model", required = false, defaultValue = "") String model,
                                                 @RequestParam(value = "location", required = false, defaultValue = "") String location,
                                                 @RequestParam(value = "protocolType", required = false, defaultValue = "") String protocolType,
-                                                @RequestParam(value = "deviceConfig", required = false, defaultValue = "") DeviceConfigDTO deviceConfig,
+                                                  DeviceConfigDTO deviceConfig,
                                                 @RequestParam(value = "region", required = false, defaultValue = "") String region,
                                                 @RequestParam(value = "organization", required = false, defaultValue = "") String organization,
                                                 @RequestParam(value = "timezone", required = false, defaultValue = "") String timezone,

@@ -178,7 +178,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
     @Override
     public Map<String, Object> deleteDevice(String deviceId, String appId) throws Exception {
         refreshToken();
-        String strUrlRegister = mStrBaseUrl + "/iocm/app/dm/v1.4.0/devices/" + deviceId+"?appId="+appId+"&cascade={cascade}";
+        String strUrlRegister = mStrBaseUrl + "/iocm/app/dm/v1.4.0/devices/" + deviceId+"?appId="+appId;
         HttpsUtil httpsUtil = new HttpsUtil();
         httpsUtil.initSSLConfigForTwoWay();
         String strResult = httpsUtil.doDeleteForString(strUrlRegister, mapHeader);
