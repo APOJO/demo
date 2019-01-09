@@ -35,7 +35,7 @@ public class DeviceManageController {
             @RequestParam(value = "nodeId", required = false, defaultValue = "") String nodeId,
             @RequestParam(value = "endUserId", required = false, defaultValue = "") String endUserId,
             @RequestParam(value = "psk", required = false, defaultValue = "") String psk,
-            @RequestParam(value = "timeout", required = false, defaultValue = "180") Integer timeout,
+            @RequestParam(value = "timeout", required = false, defaultValue = "3000") Integer timeout,
             @RequestParam(value = "isSecure", required = false, defaultValue = "false") Boolean isSecure
     ) throws Exception {
 
@@ -52,10 +52,10 @@ public class DeviceManageController {
      */
     @RequestMapping(value = "/updateVerifyCode", method = RequestMethod.PUT)
     public Map<String, Object> updateVerifyCode(@RequestParam(value = "verifyCode", required = false, defaultValue = "") String verifyCode,
-                                                @RequestParam(value = "nodeId", required = true, defaultValue = "") String nodeId,
+                                                @RequestParam(value = "nodeId", required = false, defaultValue = "") String nodeId,
                                                 @RequestParam(value = "appId", required = false, defaultValue = "") String appId,
-                                                @RequestParam(value = "deviceId", required = false, defaultValue = "") String deviceId,
-                                                @RequestParam(value = "timeout", required = false, defaultValue = "180") Integer timeout
+                                                @RequestParam(value = "deviceId", required = true, defaultValue = "") String deviceId,
+                                                @RequestParam(value = "timeout", required = false, defaultValue = "3000") Integer timeout
     ) throws Exception {
 
         return deviceManageService.updateVerifyCode(verifyCode, nodeId, appId, deviceId, timeout);

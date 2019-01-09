@@ -1,5 +1,11 @@
 package com.iotplatform.service.impl;
 
+import com.iotplatform.client.NorthApiClient;
+import com.iotplatform.client.NorthApiException;
+import com.iotplatform.client.dto.*;
+import com.iotplatform.client.invokeapi.Authentication;
+import com.iotplatform.client.invokeapi.DeviceManagement;
+import com.iotplatform.client.invokeapi.SubscriptionManagement;
 import com.iotplatform.mapper.DeviceManageMapper;
 import com.iotplatform.model.Constants;
 import com.iotplatform.model.Device;
@@ -7,6 +13,7 @@ import com.iotplatform.model.DeviceConfigDTO;
 import com.iotplatform.service.AuthorizationService;
 import com.iotplatform.service.CacheService;
 import com.iotplatform.service.DeviceManageService;
+import com.iotplatform.utils.AuthUtil;
 import com.iotplatform.utils.HttpsUtil;
 import com.iotplatform.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @ClassName DeviceManageServiceImpl
@@ -26,6 +34,9 @@ import java.util.Map;
 public class DeviceManageServiceImpl implements DeviceManageService {
     @Autowired
     private DeviceManageMapper deviceManageMapper;
+    private NorthApiClient northApiClient = AuthUtil.initApiClient();
+    private Authentication authentication = new Authentication(northApiClient);;
+    private DeviceManagement deviceManagement = new DeviceManagement(northApiClient);;
     HashMap<String, String> mapHeader;
     @Autowired
     private CacheService cacheService;
@@ -42,7 +53,11 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      */
     @Override
     public Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure) throws Exception {
-        refreshToken();
+        Map<String, Object> map = new HashMap<>();
+        AuthOutDTO authOutDTO = authentication.getAuthToken();
+        String accessToken = authOutDTO.getAccessToken();
+        RegDirectDeviceInDTO2 directDeviceInDTO2 = new RegDirectDeviceInDTO2();
+
         boolean bValidNodeId = checkParam(nodeId);
         boolean bValidVerifyCode = checkParam(verifyCode);
         if (!bValidNodeId && !bValidVerifyCode) {
@@ -52,37 +67,29 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         } else if (!bValidVerifyCode) {
             verifyCode = verifyCode;
         }
-
-        // Request URL
-        String strUrlRegister = mStrBaseUrl + "/iocm/app/reg/v1.1.0/devices";
-        // Param
-        Map<String, Object> mParam = new HashMap<String, Object>();
-        mParam.put("verifyCode", verifyCode);
-        mParam.put("nodeId", nodeId);
-        mParam.put("timeout", timeout);
-        String strRequest = JsonUtil.jsonObj2Sting(mParam);
-        // Send Request
-        HttpsUtil httpsUtil = new HttpsUtil();
-        httpsUtil.initSSLConfigForTwoWay();
-        String strResult = httpsUtil.doPostJsonForString(strUrlRegister, mapHeader, strRequest);
-
-        // Parse Result
-        Map<String, Object> mResult = new HashMap<String, Object>();
-        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
-        if (mResult.get("error_code") != null) {
-            return mResult;
-        } else {
-            Device device = new Device();
-            device.setDeviceId(mResult.get("deviceId").toString());
-            device.setPsk(mResult.get("psk").toString());
-            device.setTimeout(Integer.parseInt(mResult.get("timeout").toString()));
-            device.setVerifyCode(mResult.get("verifyCode").toString());
-            device.setNodeId(nodeId);
-            device.setCreateTime(new Date());
-            device.setUpdateTime(new Date());
-            deviceManageMapper.insertDevice(device);
+        directDeviceInDTO2.setNodeId(nodeId);
+        directDeviceInDTO2.setVerifyCode(verifyCode);
+        directDeviceInDTO2.setTimeout(timeout);
+        directDeviceInDTO2.setEndUserId(endUserId);
+        directDeviceInDTO2.setIsSecure(isSecure);
+        try {
+            RegDirectDeviceOutDTO rddod = deviceManagement.regDirectDevice(directDeviceInDTO2, null, accessToken);
+            if (rddod!=null){
+                int reslut=deviceManageMapper.insertRegDirectDeviceOutDTO(rddod);
+                if (reslut>0){
+                    map.put("code",200);
+                    map.put("msg","设备注册成功");
+                }else{
+                    map.put("code",500);
+                    map.put("msg","设备注册失败");
+                }
+            }
+        } catch (NorthApiException e) {
+            map.put("error_massage",e);
         }
-        return mResult;
+
+
+      return map;
     }
 
     /**
@@ -94,33 +101,32 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      */
     @Override
     public Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId, String deviceId, Integer timeout) throws Exception {
-
-        refreshToken();
-        String strUrlRegister = mStrBaseUrl + "/iocm/app/reg/v1.1.0/deviceCredentials/" + deviceId;
-        // Param
-        Map<String, Object> mParam = new HashMap<String, Object>();
-        mParam.put("verifyCode", verifyCode);
-        mParam.put("nodeId", nodeId);
-        mParam.put("timeout", timeout);
-        mParam.put("appId", appId);
-        String strRequest = JsonUtil.jsonObj2Sting(mParam);
-        // Send Request
-        HttpsUtil httpsUtil = new HttpsUtil();
-        httpsUtil.initSSLConfigForTwoWay();
-        String strResult = httpsUtil.doPutJsonForString(strUrlRegister, mapHeader, strRequest);
-        Map<String, Object> mResult = new HashMap<String, Object>();
-        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
-        if (mResult.get("error_code") != null) {
-            return mResult;
-        } else {
+        Map<String, Object> map = new HashMap<>();
+        AuthOutDTO authOutDTO = authentication.getAuthToken();
+        String accessToken = authOutDTO.getAccessToken();
+        RefreshDeviceKeyInDTO rdkInDTO = new RefreshDeviceKeyInDTO();
+        rdkInDTO.setNodeId(nodeId);
+        rdkInDTO.setVerifyCode(verifyCode);
+        rdkInDTO.setTimeout(timeout);
+        try {
+            RefreshDeviceKeyOutDTO rdkOutDTO = deviceManagement.refreshDeviceKey(rdkInDTO, deviceId, appId, accessToken);
             Device device = deviceManageMapper.selectByDeviceId(deviceId);
-            device.setNodeId(mResult.get("nodeId").toString());
-            device.setTimeout(Integer.parseInt(mResult.get("timeout").toString()));
-            device.setVerifyCode(mResult.get("verifyCode").toString());
+            device.setVerifyCode(rdkOutDTO.getVerifyCode());
             device.setUpdateTime(new Date());
-            deviceManageMapper.updateDevice(device);
+            int result=deviceManageMapper.updateDevice(device);
+            if (result>0){
+                map.put("code",200);
+                map.put("msg","刷新成功");
+                map.put("rdkOutDTO",rdkOutDTO);
+            }else{
+                map.put("code",500);
+                map.put("msg","刷新失败");
+            }
+        } catch (NorthApiException e) {
+            map.put("error_massage",e);
         }
-        return mResult;
+        return map;
+
     }
 
     /**
@@ -177,45 +183,37 @@ public class DeviceManageServiceImpl implements DeviceManageService {
      */
     @Override
     public Map<String, Object> deleteDevice(String deviceId, String appId) throws Exception {
-        refreshToken();
-        String strUrlRegister = mStrBaseUrl + "/iocm/app/dm/v1.4.0/devices/" + deviceId+"?appId="+appId;
-        HttpsUtil httpsUtil = new HttpsUtil();
-        httpsUtil.initSSLConfigForTwoWay();
-        String strResult = httpsUtil.doDeleteForString(strUrlRegister, mapHeader);
-        Map<String, Object> mResult = new HashMap<String, Object>();
-        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
-        if (mResult.get("error_code") != null) {
-            return mResult;
-        } else {
+        Map<String, Object> map = new HashMap<>();
+
+        AuthOutDTO authOutDTO = authentication.getAuthToken();
+        String accessToken = authOutDTO.getAccessToken();
         Device device=deviceManageMapper.selectByDeviceId(deviceId);
         if (device!=null){
             int r=deviceManageMapper.deleteDeviceById(deviceId);
             if (r>0){
-                mResult.put("deleteFromDB","true");
+                map.put("deleteFromDB","true");
             }else{
-                mResult.put("deleteFromDB","false");
+                map.put("deleteFromDB","false");
             }
         }
+        try {
+            deviceManagement.deleteDirectDevice(deviceId, true, appId, accessToken);
+        }catch (Exception e){
+            map.put("error_massage",e);
         }
-        return mResult;
+        return map;
     }
 
     @Override
     public Map<String, Object> queryDeviceStatus(String deviceId, String appId) throws Exception {
-        refreshToken();
-        String strUrlRegister = mStrBaseUrl + "/iocm/app/reg/v1.1.0/deviceCredentials/" + deviceId+"?appId="+appId;
-        HttpsUtil httpsUtil = new HttpsUtil();
-        httpsUtil.initSSLConfigForTwoWay();
-        Map<String, String> mParam = new HashMap<String, String>();
-        mParam.put("deviceId", deviceId);
-        mParam.put("appId", appId);
-        String strResult = httpsUtil.doGetWithParasForString(strUrlRegister, mParam,mapHeader);
-        Map<String, Object> mResult = new HashMap<String, Object>();
-        mResult = JsonUtil.jsonString2SimpleObj(strResult, mResult.getClass());
-        if (mResult.get("error_code") != null) {
-            return mResult;
+        Map<String, Object> map=new HashMap<>();
+        AuthOutDTO authOutDTO = authentication.getAuthToken();
+        String accessToken = authOutDTO.getAccessToken();
+        if (deviceId!=null&&!"".equals(deviceId)){
+            QueryDeviceStatusOutDTO qdsOutDTO = deviceManagement.queryDeviceStatus(deviceId, appId, accessToken);
+            map.put("qdsOutDTO",qdsOutDTO);
         }
-        return mResult;
+        return map;
     }
 
     private void refreshToken() throws java.io.IOException {

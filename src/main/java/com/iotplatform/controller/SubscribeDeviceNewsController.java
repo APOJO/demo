@@ -1,6 +1,5 @@
 package com.iotplatform.controller;
 
-import com.iotplatform.model.DeviceInfo;
 import com.iotplatform.service.SubscribeDeviceNewsService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +23,36 @@ public class SubscribeDeviceNewsController {
     @Autowired
     private SubscribeDeviceNewsService subscribeDeviceNewsService;
 
-    @RequestMapping(value = "/deviceInfoChanged", method = RequestMethod.POST)
-    public Map<String, Object> deviceInfoChanged(
-            @RequestParam(value = "notifyType", required = false, defaultValue = "") String notifyType,
-            @RequestParam(value = "deviceId", required = false, defaultValue = "") String deviceId,
-            @RequestParam(value = "gatewayId", required = false, defaultValue = "") String gatewayId,
-            DeviceInfo deviceInfo
-    ) {
-
-        return subscribeDeviceNewsService.deviceInfoChanged(notifyType,deviceId,gatewayId,deviceInfo);
+    @RequestMapping(value = "/notification", method = RequestMethod.POST)
+    public Map<String, Object> notification(
+            @RequestParam(value = "callbackUrl", required = true, defaultValue = "") String callbackUrl,
+            @RequestParam(value = "notifyType", required = true, defaultValue = "") String notifyType
+    )throws Exception {
+        return subscribeDeviceNewsService.notification(callbackUrl,notifyType);
     }
+
+    @RequestMapping(value = "/querySingle", method = RequestMethod.POST)
+    public Map<String, Object> querySingle(
+            @RequestParam(value = "subscriptionId", required = true, defaultValue = "") String subscriptionId,
+            @RequestParam(value = "appId", required = false, defaultValue = "") String appId
+    )throws Exception {
+        return subscribeDeviceNewsService.querySingle(subscriptionId,appId);
+    }
+
+
+    @RequestMapping(value = "/deleteSingle", method = RequestMethod.POST)
+    public Map<String, Object> deleteSingle(
+            @RequestParam(value = "subscriptionId", required = true, defaultValue = "") String subscriptionId
+    )throws Exception {
+        return subscribeDeviceNewsService.deleteSingle(subscriptionId);
+    }
+
+
+    @RequestMapping(value = "/queryBatch", method = RequestMethod.POST)
+    public Map<String, Object> queryBatch(
+    )throws Exception {
+        return subscribeDeviceNewsService.queryBatch();
+    }
+
 
 }

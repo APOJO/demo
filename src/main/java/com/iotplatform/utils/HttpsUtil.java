@@ -56,11 +56,11 @@ public class HttpsUtil extends DefaultHttpClient
 
     public final static String CHARSET_UTF8 = "UTF-8";
 
-    public static String SELFCERTPATH ="/opt/demo/config/outgoing.CertwithKey.pkcs12";
-    public static String TRUSTCAPATH ="/opt/demo/config/ca.jks";
+    /*public static String SELFCERTPATH ="/opt/demo/config/outgoing.CertwithKey.pkcs12";
+    public static String TRUSTCAPATH ="/opt/demo/config/ca.jks";*/
 
-/*	public static String SELFCERTPATH =HttpClient.class.getResource("/outgoing.CertwithKey.pkcs12").getPath();
-    public static String TRUSTCAPATH =HttpClient.class.getResource("/ca.jks").getPath();*/
+	public static String SELFCERTPATH =HttpClient.class.getResource("/outgoing.CertwithKey.pkcs12").getPath();
+    public static String TRUSTCAPATH =HttpClient.class.getResource("/ca.jks").getPath();
 
     public static String SELFCERTPWD = "IoM@1234";
 

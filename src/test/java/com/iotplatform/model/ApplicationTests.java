@@ -1,4 +1,4 @@
-package com.telecommunication.model;
+package com.iotplatform.model;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

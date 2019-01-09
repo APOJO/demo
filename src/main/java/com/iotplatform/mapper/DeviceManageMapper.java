@@ -1,5 +1,6 @@
 package com.iotplatform.mapper;
 
+import com.iotplatform.client.dto.RegDirectDeviceOutDTO;
 import com.iotplatform.model.Device;
 import org.springframework.stereotype.Repository;
 
@@ -50,4 +51,13 @@ public interface DeviceManageMapper {
      */
 
     int deleteDeviceById(String deviceId);
+
+    /**
+     * @Description 设备注册，添加到数据库
+     * @author xiebifeng
+     * @date 2019/1/3 13:59
+     * @param: Device
+     * @return: int
+     */
+    int insertRegDirectDeviceOutDTO(RegDirectDeviceOutDTO regDirectDeviceOutDTO);
 }

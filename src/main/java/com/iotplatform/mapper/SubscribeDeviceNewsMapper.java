@@ -1,5 +1,6 @@
 package com.iotplatform.mapper;
 
+import com.iotplatform.client.dto.SubscriptionDTO;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SubscribeDeviceNewsMapper {
 
+    int insertSubDTO(SubscriptionDTO subDTO);
+
+    int deleteSingleSubscription(String subscriptionId);
 }
