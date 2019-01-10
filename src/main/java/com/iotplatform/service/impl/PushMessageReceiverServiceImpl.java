@@ -1,10 +1,10 @@
 package com.iotplatform.service.impl;
 
 import com.iotplatform.client.dto.*;
-import com.iotplatform.client.invokeapi.PushMessageReceiver;
 import com.iotplatform.mapper.PushMessageReceiverMapper;
+import com.iotplatform.service.PushMessageReceiverService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Service;
 
 /**
  * @ClassName PushMessageReceiverServiceImpl
@@ -13,8 +13,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
  * @Date 2019/1/8 21:07
  */
 
-@EnableAutoConfiguration
-public class PushMessageReceiverServiceImpl extends PushMessageReceiver {
+@Service
+public class PushMessageReceiverServiceImpl implements PushMessageReceiverService {
     @Autowired
     private PushMessageReceiverMapper pushMessageReceiverMapper;
 

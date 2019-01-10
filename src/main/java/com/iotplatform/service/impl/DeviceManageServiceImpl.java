@@ -11,7 +11,6 @@ import com.iotplatform.service.DeviceManageService;
 import com.iotplatform.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -184,7 +183,6 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         }
         return map;
     }
-
 
 
 
