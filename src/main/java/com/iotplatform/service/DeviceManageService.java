@@ -1,6 +1,6 @@
 package com.iotplatform.service;
 
-import com.iotplatform.model.DeviceConfigDTO;
+import com.iotplatform.client.dto.DeviceConfigDTO;
 
 import java.util.Map;
 
@@ -38,7 +38,10 @@ public interface DeviceManageService {
      * @return:
      */
 
-    Map<String, Object> updateDeviceInfo(String deviceId, String appId, String name, String endUser, Enum mute, String manufacturerId, String manufacturerName, String deviceType, String model, String location, String protocolType, DeviceConfigDTO deviceConfig, String region, String organization, String timezone, Boolean isSecure, String psk) throws Exception;
+    Map<String, Object> modifyDeviceInfo(String deviceId, String appId, String name, String endUser, String mute,
+                                         String manufacturerId, String manufacturerName, String deviceType, String model,
+                                         String location, String protocolType, DeviceConfigDTO deviceConfig, String region,
+                                         String organization, String timezone) throws Exception;
 
     /**
      * @Description 删除设备

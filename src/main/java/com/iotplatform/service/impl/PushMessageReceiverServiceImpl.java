@@ -18,6 +18,12 @@ public class PushMessageReceiverServiceImpl extends PushMessageReceiver {
     @Autowired
     private PushMessageReceiverMapper pushMessageReceiverMapper;
 
+
+    @Override
+    public void handleBody(String body) {
+        System.out.println("handleBody ==> " + body);
+    }
+
     //override the callback functions if needed, otherwise, you can delete them.
     @Override
     public void handleDeviceAdded(NotifyDeviceAddedDTO body) {
