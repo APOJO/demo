@@ -10,6 +10,8 @@ import com.iotplatform.service.SubscribeDeviceNewsService;
 import com.iotplatform.utils.AuthUtil;
 import com.iotplatform.utils.PropertyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,16 +27,14 @@ import java.util.Map;
 public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsService {
     @Autowired
     private SubscribeDeviceNewsMapper subscribeDeviceNewsMapper;
-    private NorthApiClient northApiClient = AuthUtil.initApiClient();
-    private Authentication authentication = new Authentication(northApiClient);;
-    private SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
+
 
     @Override
     public Map<String, Object> notification(String callbackUrl, String notifyType)throws Exception {
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
         Map<String, Object> map=new HashMap<>();
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
-        SubscriptionDTO subDTO = subDeviceData(subscriptionManagement, notifyType, callbackUrl, accessToken,map);
+        SubscriptionDTO subDTO = subDeviceData(subscriptionManagement, notifyType, callbackUrl, getAccessToken(),map);
         if (subDTO==null){
             return map;
         }
@@ -55,9 +55,9 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
     @Override
     public Map<String, Object> querySingle(String subscriptionId, String appId) throws Exception{
         Map<String, Object> map=new HashMap<>();
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
-        SubscriptionDTO subDTO2 = subscriptionManagement.querySingleSubscription(subscriptionId, appId, accessToken);
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
+        SubscriptionDTO subDTO2 = subscriptionManagement.querySingleSubscription(subscriptionId, appId, getAccessToken());
         map.put("subDTO",subDTO2);
         return map;
     }
@@ -65,9 +65,9 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
     @Override
     public Map<String, Object> deleteSingle(String subscriptionId) throws Exception {
         Map<String, Object> map=new HashMap<>();
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
-        subscriptionManagement.deleteSingleSubscription(subscriptionId, null, accessToken);
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
+        subscriptionManagement.deleteSingleSubscription(subscriptionId, null, getAccessToken());
         int result=subscribeDeviceNewsMapper.deleteSingleSubscription(subscriptionId);
         if (result>0){
             map.put("code",200);
@@ -84,9 +84,9 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
         Map<String, Object> map=new HashMap<>();
         QueryBatchSubInDTO qbsInDTO = new QueryBatchSubInDTO();
         qbsInDTO.setAppId(PropertyUtil.getProperty("appId"));
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
-        QueryBatchSubOutDTO qbsOutDTO = subscriptionManagement.queryBatchSubscriptions(qbsInDTO, accessToken);
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
+        QueryBatchSubOutDTO qbsOutDTO = subscriptionManagement.queryBatchSubscriptions(qbsInDTO, getAccessToken());
         map.put("qbsOutDTO",qbsOutDTO);
         return map;
     }
@@ -105,5 +105,12 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
             System.out.println(e.toString());
         }
         return null;
+    }
+
+    private static  String getAccessToken() throws Exception{
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        Authentication authentication = new Authentication(northApiClient);
+        AuthOutDTO authOutDTO = authentication.getAuthToken();
+        return  authOutDTO.getAccessToken();
     }
 }

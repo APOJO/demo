@@ -25,9 +25,6 @@ import java.util.Map;
 public class DeviceManageServiceImpl implements DeviceManageService {
     @Autowired
     private DeviceManageMapper deviceManageMapper;
-    private NorthApiClient northApiClient = AuthUtil.initApiClient();
-    private Authentication authentication = new Authentication(northApiClient);
-    private DeviceManagement deviceManagement = new DeviceManagement(northApiClient);
 
     /**
      * @Description 设备注册
@@ -39,8 +36,8 @@ public class DeviceManageServiceImpl implements DeviceManageService {
     @Override
     public Map<String, Object> regDevice(String appId, String verifyCode, String nodeId, String endUserId, String psk, Integer timeout, Boolean isSecure) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        DeviceManagement deviceManagement = new DeviceManagement(northApiClient);
         RegDirectDeviceInDTO2 directDeviceInDTO2 = new RegDirectDeviceInDTO2();
         directDeviceInDTO2.setNodeId(nodeId);
         directDeviceInDTO2.setVerifyCode(verifyCode);
@@ -48,7 +45,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         directDeviceInDTO2.setEndUserId(endUserId);
         directDeviceInDTO2.setIsSecure(isSecure);
         try {
-            RegDirectDeviceOutDTO rddod = deviceManagement.regDirectDevice(directDeviceInDTO2, null, accessToken);
+            RegDirectDeviceOutDTO rddod = deviceManagement.regDirectDevice(directDeviceInDTO2, appId, getAccessToken());
             if (rddod != null) {
                 int reslut = deviceManageMapper.insertRegDirectDeviceOutDTO(rddod);
                 if (reslut > 0) {
@@ -75,14 +72,14 @@ public class DeviceManageServiceImpl implements DeviceManageService {
     @Override
     public Map<String, Object> updateVerifyCode(String verifyCode, String nodeId, String appId, String deviceId, Integer timeout) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        DeviceManagement deviceManagement = new DeviceManagement(northApiClient);
         RefreshDeviceKeyInDTO rdkInDTO = new RefreshDeviceKeyInDTO();
         rdkInDTO.setNodeId(nodeId);
         rdkInDTO.setVerifyCode(verifyCode);
         rdkInDTO.setTimeout(timeout);
         try {
-            RefreshDeviceKeyOutDTO rdkOutDTO = deviceManagement.refreshDeviceKey(rdkInDTO, deviceId, appId, accessToken);
+            RefreshDeviceKeyOutDTO rdkOutDTO = deviceManagement.refreshDeviceKey(rdkInDTO, deviceId, appId, getAccessToken());
             Device device = deviceManageMapper.selectByDeviceId(deviceId);
             device.setVerifyCode(rdkOutDTO.getVerifyCode());
             device.setUpdateTime(new Date());
@@ -115,8 +112,8 @@ public class DeviceManageServiceImpl implements DeviceManageService {
                                                 String location, String protocolType, DeviceConfigDTO deviceConfig, String region,
                                                 String organization, String timezone) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        DeviceManagement deviceManagement = new DeviceManagement(northApiClient);
         ModifyDeviceInforInDTO mdiInDTO = new ModifyDeviceInforInDTO();
         mdiInDTO.setName(name);
         mdiInDTO.setDeviceType(deviceType);
@@ -131,7 +128,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         mdiInDTO.setRegion(region);
         mdiInDTO.setTimezone(timezone);
         try {
-            deviceManagement.modifyDeviceInfo(mdiInDTO, deviceId, appId, accessToken);
+            deviceManagement.modifyDeviceInfo(mdiInDTO, deviceId, appId, getAccessToken());
             System.out.println("modify device info succeeded");
             map.put("code", 200);
             map.put("msg", "设备信息修改成功");
@@ -152,9 +149,8 @@ public class DeviceManageServiceImpl implements DeviceManageService {
     @Override
     public Map<String, Object> deleteDevice(String deviceId, String appId) throws Exception {
         Map<String, Object> map = new HashMap<>();
-
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        DeviceManagement deviceManagement = new DeviceManagement(northApiClient);
         Device device = deviceManageMapper.selectByDeviceId(deviceId);
         if (device != null) {
             int r = deviceManageMapper.deleteDeviceById(deviceId);
@@ -165,7 +161,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
             }
         }
         try {
-            deviceManagement.deleteDirectDevice(deviceId, true, appId, accessToken);
+            deviceManagement.deleteDirectDevice(deviceId, true, appId, getAccessToken());
         } catch (Exception e) {
             map.put("error_massage", e);
         }
@@ -175,15 +171,20 @@ public class DeviceManageServiceImpl implements DeviceManageService {
     @Override
     public Map<String, Object> queryDeviceStatus(String deviceId, String appId) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        AuthOutDTO authOutDTO = authentication.getAuthToken();
-        String accessToken = authOutDTO.getAccessToken();
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        DeviceManagement deviceManagement = new DeviceManagement(northApiClient);
         if (deviceId != null && !"".equals(deviceId)) {
-            QueryDeviceStatusOutDTO qdsOutDTO = deviceManagement.queryDeviceStatus(deviceId, appId, accessToken);
+            QueryDeviceStatusOutDTO qdsOutDTO = deviceManagement.queryDeviceStatus(deviceId, appId, getAccessToken());
             map.put("qdsOutDTO", qdsOutDTO);
         }
         return map;
     }
 
 
-
+    private static String getAccessToken() throws Exception{
+        NorthApiClient northApiClient = AuthUtil.initApiClient();
+        Authentication authentication = new Authentication(northApiClient);
+        AuthOutDTO authOutDTO = authentication.getAuthToken();
+        return  authOutDTO.getAccessToken();
+    }
 }

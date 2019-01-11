@@ -28,7 +28,12 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     @Override
     public void handleDeviceAdded(NotifyDeviceAddedDTO body) {
         System.out.println("deviceAdded ==> " + body);
-        //TODO deal with deviceAdded notification
+
+        pushMessageReceiverMapper.insertDevice(body);
+        if (null!=body.getDeviceInfo()){
+            DeviceInfo deviceInfo=body.getDeviceInfo();
+        }
+
     }
 
     @Override
