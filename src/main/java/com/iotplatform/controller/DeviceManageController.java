@@ -70,7 +70,7 @@ public class DeviceManageController {
      */
     @RequestMapping(value = "/modifyDeviceInfo", method = RequestMethod.PUT)
     public Map<String, Object> modifyDeviceInfo(@RequestParam(value = "deviceId", required = true, defaultValue = "") String deviceId,
-                                                @RequestParam(value = "appId", required = false, defaultValue = "") String appId,
+                                                @RequestParam(value = "appId", required = false) String appId,
                                                 @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                                 @RequestParam(value = "endUser", required = false) String endUser,
                                                 @RequestParam(value = "mute", required = false) String mute,
@@ -97,15 +97,15 @@ public class DeviceManageController {
      * @return: java.util.Map<java.lang.String       ,       java.lang.Object>
      */
     @RequestMapping(value = "/deleteDevice", method = RequestMethod.DELETE)
-    public Map<String, Object> deleteDevice(@RequestParam(value = "appId", required = false, defaultValue = "") String appId,
-                                            @RequestParam(value = "deviceId", required = true, defaultValue = "") String deviceId
+    public Map<String, Object> deleteDevice(@RequestParam(value = "appId", required = false) String appId,
+                                            @RequestParam(value = "deviceId", required = true) String deviceId
 
     ) throws Exception {
         return deviceManageService.deleteDevice(deviceId, appId);
     }
 
     @RequestMapping(value = "/queryDeviceStatus", method = RequestMethod.GET)
-    public Map<String, Object> queryDeviceStatus(@RequestParam(value = "appId", required = false, defaultValue = "") String appId,
+    public Map<String, Object> queryDeviceStatus(@RequestParam(value = "appId", required = false) String appId,
                                                  @RequestParam(value = "deviceId", required = true, defaultValue = "") String deviceId
 
     ) throws Exception {

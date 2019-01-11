@@ -22,7 +22,7 @@ public class PropertyUtil {
         BufferedReader bufferedReader = null;
         if (path == null) {
             try {
-                bufferedReader = new BufferedReader(new FileReader("./application.properties"));
+                bufferedReader = new BufferedReader(new FileReader("./application.yml"));
             } catch (FileNotFoundException var5) {
                 System.out.println(var5.getMessage());
             }

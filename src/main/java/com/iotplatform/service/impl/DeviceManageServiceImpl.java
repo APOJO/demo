@@ -57,7 +57,8 @@ public class DeviceManageServiceImpl implements DeviceManageService {
                 }
             }
         } catch (NorthApiException e) {
-            map.put("error_massage", e);
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
         }
         return map;
     }
@@ -93,7 +94,8 @@ public class DeviceManageServiceImpl implements DeviceManageService {
                 map.put("msg", "刷新失败");
             }
         } catch (NorthApiException e) {
-            map.put("error_massage", e);
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
         }
         return map;
 
@@ -133,7 +135,8 @@ public class DeviceManageServiceImpl implements DeviceManageService {
             map.put("code", 200);
             map.put("msg", "设备信息修改成功");
         } catch (NorthApiException e) {
-            map.put("error_massage", e);
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
             System.out.println(e.toString());
         }
         return map;
@@ -162,8 +165,9 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         }
         try {
             deviceManagement.deleteDirectDevice(deviceId, true, appId, getAccessToken());
-        } catch (Exception e) {
-            map.put("error_massage", e);
+        } catch (NorthApiException e){
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
         }
         return map;
     }
@@ -174,9 +178,14 @@ public class DeviceManageServiceImpl implements DeviceManageService {
         NorthApiClient northApiClient = AuthUtil.initApiClient();
         DeviceManagement deviceManagement = new DeviceManagement(northApiClient);
         if (deviceId != null && !"".equals(deviceId)) {
-            QueryDeviceStatusOutDTO qdsOutDTO = deviceManagement.queryDeviceStatus(deviceId, appId, getAccessToken());
-            map.put("qdsOutDTO", qdsOutDTO);
-        }
+            try{
+                QueryDeviceStatusOutDTO qdsOutDTO = deviceManagement.queryDeviceStatus(deviceId, appId, getAccessToken());
+                map.put("qdsOutDTO", qdsOutDTO);
+            }catch (NorthApiException e){
+                map.put("error_code", e.getError_code());
+                map.put("error_desc", e.getError_desc());
+            }
+            }
         return map;
     }
 

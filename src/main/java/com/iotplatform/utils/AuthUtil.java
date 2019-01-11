@@ -3,18 +3,27 @@ package com.iotplatform.utils;
 import com.iotplatform.client.NorthApiClient;
 import com.iotplatform.client.NorthApiException;
 import com.iotplatform.client.dto.ClientInfo;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AuthUtil {
 	
 	private static NorthApiClient northApiClient = null;
-	
+
+	private static String  AuthPath=null;
+	@Value("${authPath}")
+	public static void setAuthPath(String authPath) {
+		AuthPath = authPath;
+	}
+
 	public static NorthApiClient initApiClient() {
 		if (northApiClient != null) {
 			return northApiClient;
 		}
 		northApiClient = new NorthApiClient();
 
-        PropertyUtil.init("./src/main/resources/application.properties");
+        PropertyUtil.init("./src/main/resources/application.yml");
 		
 		ClientInfo clientInfo = new ClientInfo();
         clientInfo.setPlatformIp(PropertyUtil.getProperty("platformIp"));
@@ -41,7 +50,7 @@ public class AuthUtil {
 //      String hexStrResult = HexParser.parseByte2HexStr(temp);
 //      System.out.println("encrypted secret hex sting is ："  + hexStrResult);
       
-		PropertyUtil.init("./src/main/resources/application.properties");
+		PropertyUtil.init("./src/main/resources/application.yml");
 		byte[] secret = HexParser.parseHexStr2Byte(PropertyUtil.getProperty(propertyName));
 		return new String(AesUtil.decrypt(secret, aesPwd));
 	}

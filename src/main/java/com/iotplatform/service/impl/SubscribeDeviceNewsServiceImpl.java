@@ -10,8 +10,6 @@ import com.iotplatform.service.SubscribeDeviceNewsService;
 import com.iotplatform.utils.AuthUtil;
 import com.iotplatform.utils.PropertyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -57,8 +55,13 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
         Map<String, Object> map=new HashMap<>();
         NorthApiClient northApiClient = AuthUtil.initApiClient();
         SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
-        SubscriptionDTO subDTO2 = subscriptionManagement.querySingleSubscription(subscriptionId, appId, getAccessToken());
-        map.put("subDTO",subDTO2);
+        try {
+            SubscriptionDTO subDTO2 = subscriptionManagement.querySingleSubscription(subscriptionId, appId, getAccessToken());
+            map.put("subDTO",subDTO2);
+        }catch (NorthApiException e){
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
+        }
         return map;
     }
 
@@ -67,7 +70,12 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
         Map<String, Object> map=new HashMap<>();
         NorthApiClient northApiClient = AuthUtil.initApiClient();
         SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
-        subscriptionManagement.deleteSingleSubscription(subscriptionId, null, getAccessToken());
+        try {
+            subscriptionManagement.deleteSingleSubscription(subscriptionId, null, getAccessToken());
+        }catch (NorthApiException e){
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
+        }
         int result=subscribeDeviceNewsMapper.deleteSingleSubscription(subscriptionId);
         if (result>0){
             map.put("code",200);
@@ -86,8 +94,13 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
         qbsInDTO.setAppId(PropertyUtil.getProperty("appId"));
         NorthApiClient northApiClient = AuthUtil.initApiClient();
         SubscriptionManagement subscriptionManagement = new SubscriptionManagement(northApiClient);
-        QueryBatchSubOutDTO qbsOutDTO = subscriptionManagement.queryBatchSubscriptions(qbsInDTO, getAccessToken());
-        map.put("qbsOutDTO",qbsOutDTO);
+        try {
+            QueryBatchSubOutDTO qbsOutDTO = subscriptionManagement.queryBatchSubscriptions(qbsInDTO, getAccessToken());
+            map.put("qbsOutDTO",qbsOutDTO);
+        }catch (NorthApiException e){
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
+        }
         return map;
     }
 
@@ -101,7 +114,8 @@ public class SubscribeDeviceNewsServiceImpl implements SubscribeDeviceNewsServic
             System.out.println(subDTO.toString());
             return subDTO;
         } catch (NorthApiException e) {
-            map.put("error_massage",e);
+            map.put("error_code", e.getError_code());
+            map.put("error_desc", e.getError_desc());
             System.out.println(e.toString());
         }
         return null;
