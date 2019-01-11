@@ -45,11 +45,12 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     @Override
     public void handleDeviceInfoChanged(NotifyDeviceInfoChangedDTO body) {
         System.out.println("deviceInfoChanged ==> " + body);
-        //TODO deal with DeviceInfoChanged notification
+        //TODO deal with DeviceInfoChanged notification  写入数据库
     }
 
     @Override
     public void handleDeviceDataChanged(NotifyDeviceDataChangedDTO body) {
+        //TODO 写入数据库
         System.out.println("deviceDataChanged ==> " + body);
         pushMessageReceiverMapper.insertDataChang(body);
         if (null!=body.getService()){

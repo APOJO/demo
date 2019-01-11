@@ -28,13 +28,14 @@ mybatis:
 platformIp: 180.101.147.89
 platformPort: 8743
 appId: HO8dA35cedLKYb7otoL6ESnDiEca
-secret: ECBED7A044CD0B73664776C24B2A5934D672952B8B0F4564242B0558147C0CB2
+secret: 6F0EF3B995B182F12AAC6E642806C62EB23FABF725D31494845F7E0649A87975
 
-authPath: ./src/main/resources/application.yml
+#authPath: /opt/demo/application.yml
+authPath: ./src/main/resource/application.yml
 #the value of newCaFile and newClientCertFile should not be the same as "ca.jks" or "outgoing.CertwithKey.pkcs12"
-newCaFile: classpath:mycret.pem
+newCaFile:
 newCaPassword:
-newClientCertFile: classpath:mycret.pem
+newClientCertFile:
 newClientCertPassword:
 #hostNameVerify default value is true, true means setting STRICT_HOSTNAME_VERIFIER, false means setting ALLOW_ALL_HOSTNAME_VERIFIER
 hostNameVerify: true

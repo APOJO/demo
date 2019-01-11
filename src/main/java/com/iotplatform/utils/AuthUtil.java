@@ -11,10 +11,10 @@ public class AuthUtil {
 	
 	private static NorthApiClient northApiClient = null;
 
-	private static String  AuthPath;
+	public static String  authPath;
 	@Value("${authPath}")
-	public static void setAuthPath(String authPath) {
-		AuthPath = authPath;
+	public  void setAuthPath(String authPath) {
+		authPath = authPath;
 	}
 
 	public static NorthApiClient initApiClient() {
@@ -23,7 +23,7 @@ public class AuthUtil {
 		}
 		northApiClient = new NorthApiClient();
 
-        PropertyUtil.init(AuthPath);
+        PropertyUtil.init(authPath);
 		
 		ClientInfo clientInfo = new ClientInfo();
         clientInfo.setPlatformIp(PropertyUtil.getProperty("platformIp"));
@@ -50,7 +50,7 @@ public class AuthUtil {
 //      String hexStrResult = HexParser.parseByte2HexStr(temp);
 //      System.out.println("encrypted secret hex sting is ："  + hexStrResult);
       
-		PropertyUtil.init(AuthPath);
+		PropertyUtil.init(authPath);
 		byte[] secret = HexParser.parseHexStr2Byte(PropertyUtil.getProperty(propertyName));
 		return new String(AesUtil.decrypt(secret, aesPwd));
 	}
