@@ -28,10 +28,8 @@ mybatis:
 platformIp: 180.101.147.89
 platformPort: 8743
 appId: HO8dA35cedLKYb7otoL6ESnDiEca
-secret: 6F0EF3B995B182F12AAC6E642806C62EB23FABF725D31494845F7E0649A87975
+secret: dSUBRsj7ufA2pPbAtKDfljfp6y8a
 
-#authPath: /opt/demo/application.yml
-authPath: ./src/main/resource/application.yml
 #the value of newCaFile and newClientCertFile should not be the same as "ca.jks" or "outgoing.CertwithKey.pkcs12"
 newCaFile:
 newCaPassword:

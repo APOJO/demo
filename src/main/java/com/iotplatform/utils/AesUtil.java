@@ -82,11 +82,11 @@ public class AesUtil {
         return null;
     }
 
-    public static void main(String arg[]){
+   /* public static void main(String arg[]){
         String aesPwd = "123987"; //this is a test AES password
-        String originalProperty= "HSgr0g7fI1gsfnSijBtHd7wb4Uka";//this is the app secret obtained from IoT platform
+        String originalProperty= "dSUBRsj7ufA2pPbAtKDfljfp6y8a";//this is the app secret obtained from IoT platform
         byte[] temp = AesUtil.encrypt(originalProperty, aesPwd);
         String hexStrResult = HexParser.parseByte2HexStr(temp);
         System.out.println("encrypted secret hex sting is ："  + hexStrResult);
-    }
+    }*/
 }

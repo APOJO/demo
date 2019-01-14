@@ -11,13 +11,27 @@ public class AuthUtil {
 
     private static NorthApiClient northApiClient = null;
 
-    private static String authPath;
-
-
-    @Value("${authPath}")
-    public void setAuthPath(String authPath) {
-        AuthUtil.authPath = authPath;
+    private static String platformIp;
+    private static String platformPort;
+    private static String appId;
+    private static String secret;
+    @Value("${platformIp}")
+    public  void setPlatformIp(String platformIp) {
+        AuthUtil.platformIp = platformIp;
     }
+    @Value("${platformPort}")
+    public  void setPlatformPort(String platformPort) {
+        AuthUtil.platformPort = platformPort;
+    }
+    @Value("${appId}")
+    public  void setAppId(String appId) {
+        AuthUtil.appId = appId;
+    }
+    @Value("${secret}")
+    public  void setSecret(String secret) {
+        AuthUtil.secret = secret;
+    }
+
 
     public static NorthApiClient initApiClient() {
         if (northApiClient != null) {
@@ -25,14 +39,14 @@ public class AuthUtil {
         }
         northApiClient = new NorthApiClient();
 
-        PropertyUtil.init(authPath);
+       // PropertyUtil.init(authPath);
 
         ClientInfo clientInfo = new ClientInfo();
-        clientInfo.setPlatformIp(PropertyUtil.getProperty("platformIp"));
-        clientInfo.setPlatformPort(PropertyUtil.getProperty("platformPort"));
-        clientInfo.setAppId(PropertyUtil.getProperty("appId"));
-//        clientInfo.setSecret(PropertyUtil.getProperty("secret"));
-        clientInfo.setSecret(getAesPropertyValue("secret"));
+        clientInfo.setPlatformIp(platformIp);
+        clientInfo.setPlatformPort(platformPort);
+        clientInfo.setAppId(appId);
+        clientInfo.setSecret(secret);
+       // clientInfo.setSecret(getAesPropertyValue("secret"));
 
         try {
             northApiClient.setClientInfo(clientInfo);
@@ -52,7 +66,7 @@ public class AuthUtil {
 //      String hexStrResult = HexParser.parseByte2HexStr(temp);
 //      System.out.println("encrypted secret hex sting is ："  + hexStrResult);
 
-        PropertyUtil.init(authPath);
+        //PropertyUtil.init(authPath);
         byte[] secret = HexParser.parseHexStr2Byte(PropertyUtil.getProperty(propertyName));
         return new String(AesUtil.decrypt(secret, aesPwd));
     }
