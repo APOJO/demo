@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iotplatform.mapper.DeviceInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.iotplatform.client.dto.DeviceInfo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+        <result column="node_id" property="nodeId" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="manufacturer_id" property="manufacturerId" jdbcType="VARCHAR" />
+        <result column="manufacturer_name" property="manufacturerName" jdbcType="VARCHAR" />
+        <result column="mac" property="mac" jdbcType="VARCHAR" />
+        <result column="location" property="location" jdbcType="VARCHAR" />
+        <result column="device_type" property="deviceType" jdbcType="VARCHAR" />
+        <result column="model" property="model" jdbcType="VARCHAR" />
+        <result column="sw_version" property="swVersion" jdbcType="VARCHAR" />
+        <result column="fw_version" property="fwVersion" jdbcType="VARCHAR" />
+        <result column="hw_version" property="hwVersion" jdbcType="VARCHAR" />
+        <result column="protocol_type" property="protocolType" jdbcType="VARCHAR" />
+        <result column="bridge_id" property="bridgeId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="status_detail" property="statusDetail" jdbcType="VARCHAR" />
+        <result column="mute" property="mute" jdbcType="VARCHAR" />
+        <result column="supported_security" property="supportedSecurity" jdbcType="VARCHAR" />
+        <result column="is_security" property="isSecurity" jdbcType="VARCHAR" />
+        <result column="signal_strength" property="signalStrength" jdbcType="VARCHAR" />
+        <result column="sig_version" property="sigVersion" jdbcType="VARCHAR" />
+        <result column="serial_number" property="serialNumber" jdbcType="VARCHAR" />
+        <result column="battery_level" property="batteryLevel" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    id, device_id, node_id, name, description, manufacturer_id, manufacturer_name, mac,
+    location, device_type, model, sw_version, fw_version, hw_version, protocol_type,
+    bridge_id, status, status_detail, mute, supported_security, is_security, signal_strength,
+    sig_version, serial_number, battery_level
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from device_info
+        where id = #{id,jdbcType=INTEGER}
+
+    </select>
+
+    <select id="selectByDeviceId" resultMap="BaseResultMap"  >
+        select
+        <include refid="Base_Column_List" />
+        from device_info
+        where device_id = #{deviceId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from device_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.iotplatform.client.dto.DeviceInfo" >
+    insert into device_info (id, device_id, node_id,
+      name, description, manufacturer_id,
+      manufacturer_name, mac, location,
+      device_type, model, sw_version,
+      fw_version, hw_version, protocol_type,
+      bridge_id, status, status_detail,
+      mute, supported_security, is_security,
+      signal_strength, sig_version, serial_number,
+      battery_level)
+    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{manufacturerId,jdbcType=VARCHAR},
+      #{manufacturerName,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR},
+      #{deviceType,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{swVersion,jdbcType=VARCHAR},
+      #{fwVersion,jdbcType=VARCHAR}, #{hwVersion,jdbcType=VARCHAR}, #{protocolType,jdbcType=VARCHAR},
+      #{bridgeId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{statusDetail,jdbcType=VARCHAR},
+      #{mute,jdbcType=VARCHAR}, #{supportedSecurity,jdbcType=VARCHAR}, #{isSecurity,jdbcType=VARCHAR},
+      #{signalStrength,jdbcType=VARCHAR}, #{sigVersion,jdbcType=VARCHAR}, #{serialNumber,jdbcType=VARCHAR},
+      #{batteryLevel,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.iotplatform.client.dto.DeviceInfo" >
+        insert into device_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="deviceId != null" >
+                device_id,
+            </if>
+            <if test="nodeId != null" >
+                node_id,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="manufacturerId != null" >
+                manufacturer_id,
+            </if>
+            <if test="manufacturerName != null" >
+                manufacturer_name,
+            </if>
+            <if test="mac != null" >
+                mac,
+            </if>
+            <if test="location != null" >
+                location,
+            </if>
+            <if test="deviceType != null" >
+                device_type,
+            </if>
+            <if test="model != null" >
+                model,
+            </if>
+            <if test="swVersion != null" >
+                sw_version,
+            </if>
+            <if test="fwVersion != null" >
+                fw_version,
+            </if>
+            <if test="hwVersion != null" >
+                hw_version,
+            </if>
+            <if test="protocolType != null" >
+                protocol_type,
+            </if>
+            <if test="bridgeId != null" >
+                bridge_id,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="statusDetail != null" >
+                status_detail,
+            </if>
+            <if test="mute != null" >
+                mute,
+            </if>
+            <if test="supportedSecurity != null" >
+                supported_security,
+            </if>
+            <if test="isSecurity != null" >
+                is_security,
+            </if>
+            <if test="signalStrength != null" >
+                signal_strength,
+            </if>
+            <if test="sigVersion != null" >
+                sig_version,
+            </if>
+            <if test="serialNumber != null" >
+                serial_number,
+            </if>
+            <if test="batteryLevel != null" >
+                battery_level,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="deviceId != null" >
+                #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeId != null" >
+                #{nodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacturerId != null" >
+                #{manufacturerId,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacturerName != null" >
+                #{manufacturerName,jdbcType=VARCHAR},
+            </if>
+            <if test="mac != null" >
+                #{mac,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null" >
+                #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceType != null" >
+                #{deviceType,jdbcType=VARCHAR},
+            </if>
+            <if test="model != null" >
+                #{model,jdbcType=VARCHAR},
+            </if>
+            <if test="swVersion != null" >
+                #{swVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="fwVersion != null" >
+                #{fwVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="hwVersion != null" >
+                #{hwVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="protocolType != null" >
+                #{protocolType,jdbcType=VARCHAR},
+            </if>
+            <if test="bridgeId != null" >
+                #{bridgeId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDetail != null" >
+                #{statusDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="mute != null" >
+                #{mute,jdbcType=VARCHAR},
+            </if>
+            <if test="supportedSecurity != null" >
+                #{supportedSecurity,jdbcType=VARCHAR},
+            </if>
+            <if test="isSecurity != null" >
+                #{isSecurity,jdbcType=VARCHAR},
+            </if>
+            <if test="signalStrength != null" >
+                #{signalStrength,jdbcType=VARCHAR},
+            </if>
+            <if test="sigVersion != null" >
+                #{sigVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNumber != null" >
+                #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="batteryLevel != null" >
+                #{batteryLevel,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.iotplatform.client.dto.DeviceInfo" >
+        update device_info
+        <set >
+            <if test="deviceId != null" >
+                device_id = #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeId != null" >
+                node_id = #{nodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacturerId != null" >
+                manufacturer_id = #{manufacturerId,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacturerName != null" >
+                manufacturer_name = #{manufacturerName,jdbcType=VARCHAR},
+            </if>
+            <if test="mac != null" >
+                mac = #{mac,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null" >
+                location = #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceType != null" >
+                device_type = #{deviceType,jdbcType=VARCHAR},
+            </if>
+            <if test="model != null" >
+                model = #{model,jdbcType=VARCHAR},
+            </if>
+            <if test="swVersion != null" >
+                sw_version = #{swVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="fwVersion != null" >
+                fw_version = #{fwVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="hwVersion != null" >
+                hw_version = #{hwVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="protocolType != null" >
+                protocol_type = #{protocolType,jdbcType=VARCHAR},
+            </if>
+            <if test="bridgeId != null" >
+                bridge_id = #{bridgeId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDetail != null" >
+                status_detail = #{statusDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="mute != null" >
+                mute = #{mute,jdbcType=VARCHAR},
+            </if>
+            <if test="supportedSecurity != null" >
+                supported_security = #{supportedSecurity,jdbcType=VARCHAR},
+            </if>
+            <if test="isSecurity != null" >
+                is_security = #{isSecurity,jdbcType=VARCHAR},
+            </if>
+            <if test="signalStrength != null" >
+                signal_strength = #{signalStrength,jdbcType=VARCHAR},
+            </if>
+            <if test="sigVersion != null" >
+                sig_version = #{sigVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNumber != null" >
+                serial_number = #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="batteryLevel != null" >
+                battery_level = #{batteryLevel,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.iotplatform.client.dto.DeviceInfo" >
+    update device_info
+    set device_id = #{deviceId,jdbcType=VARCHAR},
+      node_id = #{nodeId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      manufacturer_id = #{manufacturerId,jdbcType=VARCHAR},
+      manufacturer_name = #{manufacturerName,jdbcType=VARCHAR},
+      mac = #{mac,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR},
+      device_type = #{deviceType,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      sw_version = #{swVersion,jdbcType=VARCHAR},
+      fw_version = #{fwVersion,jdbcType=VARCHAR},
+      hw_version = #{hwVersion,jdbcType=VARCHAR},
+      protocol_type = #{protocolType,jdbcType=VARCHAR},
+      bridge_id = #{bridgeId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      status_detail = #{statusDetail,jdbcType=VARCHAR},
+      mute = #{mute,jdbcType=VARCHAR},
+      supported_security = #{supportedSecurity,jdbcType=VARCHAR},
+      is_security = #{isSecurity,jdbcType=VARCHAR},
+      signal_strength = #{signalStrength,jdbcType=VARCHAR},
+      sig_version = #{sigVersion,jdbcType=VARCHAR},
+      serial_number = #{serialNumber,jdbcType=VARCHAR},
+      battery_level = #{batteryLevel,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <insert id="insertChange" parameterType="com.iotplatform.client.dto.DeviceInfo" >
+    insert into device_info_change (id, node_id, description,
+      manufacturer_id, manufacturer_name, mac,
+      location, device_type, model,
+      sw_version, fw_version, hw_version,
+      protocol_type, bridge_id, status,
+      status_detail, mute, supported_security,
+      is_security, signal_strength, sig_version,
+      serial_number, name, battery_level
+      )
+    values (#{id,jdbcType=INTEGER}, #{nodeId,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+      #{manufacturerId,jdbcType=VARCHAR}, #{manufacturerName,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR},
+      #{location,jdbcType=VARCHAR}, #{deviceType,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR},
+      #{swVersion,jdbcType=VARCHAR}, #{fwVersion,jdbcType=VARCHAR}, #{hwVersion,jdbcType=VARCHAR},
+      #{protocolType,jdbcType=VARCHAR}, #{bridgeId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+      #{statusDetail,jdbcType=VARCHAR}, #{mute,jdbcType=VARCHAR}, #{supportedSecurity,jdbcType=VARCHAR},
+      #{isSecurity,jdbcType=VARCHAR}, #{signalStrength,jdbcType=VARCHAR}, #{sigVersion,jdbcType=VARCHAR},
+      #{serialNumber,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{batteryLevel,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertChangeSelective" parameterType="com.iotplatform.client.dto.DeviceInfo" >
+        insert into device_info_change
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="nodeId != null" >
+                node_id,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="manufacturerId != null" >
+                manufacturer_id,
+            </if>
+            <if test="manufacturerName != null" >
+                manufacturer_name,
+            </if>
+            <if test="mac != null" >
+                mac,
+            </if>
+            <if test="location != null" >
+                location,
+            </if>
+            <if test="deviceType != null" >
+                device_type,
+            </if>
+            <if test="model != null" >
+                model,
+            </if>
+            <if test="swVersion != null" >
+                sw_version,
+            </if>
+            <if test="fwVersion != null" >
+                fw_version,
+            </if>
+            <if test="hwVersion != null" >
+                hw_version,
+            </if>
+            <if test="protocolType != null" >
+                protocol_type,
+            </if>
+            <if test="bridgeId != null" >
+                bridge_id,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="statusDetail != null" >
+                status_detail,
+            </if>
+            <if test="mute != null" >
+                mute,
+            </if>
+            <if test="supportedSecurity != null" >
+                supported_security,
+            </if>
+            <if test="isSecurity != null" >
+                is_security,
+            </if>
+            <if test="signalStrength != null" >
+                signal_strength,
+            </if>
+            <if test="sigVersion != null" >
+                sig_version,
+            </if>
+            <if test="serialNumber != null" >
+                serial_number,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="batteryLevel != null" >
+                battery_level,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="nodeId != null" >
+                #{nodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacturerId != null" >
+                #{manufacturerId,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacturerName != null" >
+                #{manufacturerName,jdbcType=VARCHAR},
+            </if>
+            <if test="mac != null" >
+                #{mac,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null" >
+                #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceType != null" >
+                #{deviceType,jdbcType=VARCHAR},
+            </if>
+            <if test="model != null" >
+                #{model,jdbcType=VARCHAR},
+            </if>
+            <if test="swVersion != null" >
+                #{swVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="fwVersion != null" >
+                #{fwVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="hwVersion != null" >
+                #{hwVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="protocolType != null" >
+                #{protocolType,jdbcType=VARCHAR},
+            </if>
+            <if test="bridgeId != null" >
+                #{bridgeId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDetail != null" >
+                #{statusDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="mute != null" >
+                #{mute,jdbcType=VARCHAR},
+            </if>
+            <if test="supportedSecurity != null" >
+                #{supportedSecurity,jdbcType=VARCHAR},
+            </if>
+            <if test="isSecurity != null" >
+                #{isSecurity,jdbcType=VARCHAR},
+            </if>
+            <if test="signalStrength != null" >
+                #{signalStrength,jdbcType=VARCHAR},
+            </if>
+            <if test="sigVersion != null" >
+                #{sigVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNumber != null" >
+                #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="batteryLevel != null" >
+                #{batteryLevel,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

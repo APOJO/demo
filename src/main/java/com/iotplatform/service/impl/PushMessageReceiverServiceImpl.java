@@ -1,10 +1,14 @@
 package com.iotplatform.service.impl;
 
 import com.iotplatform.client.dto.*;
-import com.iotplatform.mapper.PushMessageReceiverMapper;
+import com.iotplatform.mapper.DeviceInfoMapper;
+import com.iotplatform.mapper.DeviceServiceMapper;
+import com.iotplatform.mapper.NotifyMapper;
 import com.iotplatform.service.PushMessageReceiverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @ClassName PushMessageReceiverServiceImpl
@@ -15,9 +19,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PushMessageReceiverServiceImpl implements PushMessageReceiverService {
-    @Autowired
-    private PushMessageReceiverMapper pushMessageReceiverMapper;
 
+
+    @Autowired
+    private DeviceInfoMapper deviceInfoMapper;
+    @Autowired
+    private NotifyMapper notifyMapper;
+    @Autowired
+    private DeviceServiceMapper deviceServiceMapper;
 
     @Override
     public void handleBody(String body) {
@@ -28,10 +37,11 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     @Override
     public void handleDeviceAdded(NotifyDeviceAddedDTO body) {
         System.out.println("deviceAdded ==> " + body);
-
-        pushMessageReceiverMapper.insertDevice(body);
-        if (null!=body.getDeviceInfo()){
-            DeviceInfo deviceInfo=body.getDeviceInfo();
+        insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
+        if (null != body.getDeviceInfo()) {
+            //添加设备信息
+            DeviceInfo deviceInfo = body.getDeviceInfo();
+            deviceInfoMapper.insertSelective(deviceInfo);
         }
 
     }
@@ -39,6 +49,7 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     @Override
     public void handleBindDevice(NotifyBindDeviceDTO body) {
         System.out.println("bindDevice ==> " + body);
+        insertNotify(body.getDeviceId(), "", body.getNotifyType());
         //TODO deal with BindDevice notification
     }
 
@@ -46,31 +57,62 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     public void handleDeviceInfoChanged(NotifyDeviceInfoChangedDTO body) {
         System.out.println("deviceInfoChanged ==> " + body);
         //TODO deal with DeviceInfoChanged notification  写入数据库
+        insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
+        DeviceInfo deviceInfo = deviceInfoMapper.selectByDeviceId(body.getDeviceId());
+        deviceInfoMapper.insertChangeSelective(body.getDeviceInfo());
+        if(deviceInfo==null){
+            DeviceInfo deviceInfo1=new DeviceInfo();
+            deviceInfo1.setDeviceId(body.getDeviceId());
+            deviceInfoMapper.insertSelective(body.getDeviceInfo());
+        }else{
+            DeviceInfo deviceInfo1 = body.getDeviceInfo();
+            deviceInfo1.setId(deviceInfo.getId());
+            deviceInfoMapper.updateByPrimaryKeySelective(deviceInfo1);
+        }
+
+    }
+    //消息通知类型添加到数据库
+    private void insertNotify(String deviceId, String gatewayId, String notifyType) {
+        Notify notify = new Notify();
+        notify.setCreateTime(new Date());
+        notify.setUpdateTime(new Date());
+        notify.setDeviceId(deviceId);
+        notify.setGatewayId(gatewayId);
+        notify.setNotifyType(notifyType);
+        notifyMapper.insertSelective(notify);
     }
 
     @Override
     public void handleDeviceDataChanged(NotifyDeviceDataChangedDTO body) {
+        insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
         //TODO 写入数据库
         System.out.println("deviceDataChanged ==> " + body);
-        pushMessageReceiverMapper.insertDataChang(body);
-        if (null!=body.getService()){
-            int result=pushMessageReceiverMapper.insertService(body.getService());
-        }
-
+        DeviceService service=new DeviceService();
+        service.setCreateTime(new Date());
+        service.setUpdateTime(new Date());
+        service.setData(body.getService().getData());
+        service.setDeviceId(body.getDeviceId());
+        service.setEventTime(body.getService().getEventTime());
+        service.setServiceInfo(body.getService().getServiceInfo());
+        service.setServiceType(body.getService().getServiceType());
+        deviceServiceMapper.insert(service);
     }
 
     @Override
     public void handleDeviceDatasChanged(NotifyDeviceDatasChangedDTO body) {
+        insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
         System.out.println("deviceDatasChanged ==> " + body);
     }
 
     @Override
     public void handleServiceInfoChanged(NotifyServiceInfoChangedDTO body) {
+        insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
         System.out.println("serviceInfoChanged ==> " + body);
     }
 
     @Override
     public void handleDeviceDeleted(NotifyDeviceDeletedDTO body) {
+        insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
         System.out.println("deviceDeleted ==> " + body);
     }
 

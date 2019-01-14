@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iotplatform.mapper.DeviceServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.iotplatform.client.dto.DeviceService" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
+    <result column="service_type" property="serviceType" jdbcType="VARCHAR" />
+    <result column="event_time" property="eventTime" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="servie_info" property="servieInfo" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.iotplatform.client.dto.DeviceService" extends="BaseResultMap" >
+    <result column="data" property="data" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, service_id, service_type, event_time, create_time, update_time, servie_info
+  </sql>
+  <sql id="Blob_Column_List" >
+    data
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from device_service
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from device_service
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iotplatform.client.dto.DeviceService" >
+    insert into device_service (id, service_id, service_type, 
+      event_time, create_time, update_time, 
+      servie_info, data)
+    values (#{id,jdbcType=INTEGER}, #{serviceId,jdbcType=VARCHAR}, #{serviceType,jdbcType=VARCHAR}, 
+      #{eventTime,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+      #{servieInfo,jdbcType=VARCHAR}, #{data,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iotplatform.client.dto.DeviceService" >
+    insert into device_service
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="serviceType != null" >
+        service_type,
+      </if>
+      <if test="eventTime != null" >
+        event_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="servieInfo != null" >
+        servie_info,
+      </if>
+      <if test="data != null" >
+        data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType != null" >
+        #{serviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="eventTime != null" >
+        #{eventTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="servieInfo != null" >
+        #{servieInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        #{data,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iotplatform.client.dto.DeviceService" >
+    update device_service
+    <set >
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType != null" >
+        service_type = #{serviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="eventTime != null" >
+        event_time = #{eventTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="servieInfo != null" >
+        servie_info = #{servieInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        data = #{data,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.iotplatform.client.dto.DeviceService" >
+    update device_service
+    set service_id = #{serviceId,jdbcType=VARCHAR},
+      service_type = #{serviceType,jdbcType=VARCHAR},
+      event_time = #{eventTime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      servie_info = #{servieInfo,jdbcType=VARCHAR},
+      data = #{data,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iotplatform.client.dto.DeviceService" >
+    update device_service
+    set service_id = #{serviceId,jdbcType=VARCHAR},
+      service_type = #{serviceType,jdbcType=VARCHAR},
+      event_time = #{eventTime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      servie_info = #{servieInfo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

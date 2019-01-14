@@ -7,6 +7,8 @@ package com.iotplatform.client.dto;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Date;
+
 // Referenced classes of package com.iotplatform.client.dto:
 //            ServiceInfo
 
@@ -71,10 +73,47 @@ public class DeviceService
     {
         return (new StringBuilder("DeviceService [serviceId=")).append(serviceId).append(", serviceType=").append(serviceType).append(", data=").append(data).append(", eventTime=").append(eventTime).append(", serviceInfo=").append(serviceInfo).append("]").toString();
     }
-
+    private String deviceId;
     private String serviceId;
     private String serviceType;
     private ObjectNode data;
     private String eventTime;
     private ServiceInfo serviceInfo;
+
+    private Date createTime;
+
+    private Date updateTime;
+    private Integer id;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 }
