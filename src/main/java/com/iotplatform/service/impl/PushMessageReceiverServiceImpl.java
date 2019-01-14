@@ -4,11 +4,15 @@ import com.iotplatform.client.dto.*;
 import com.iotplatform.mapper.DeviceInfoMapper;
 import com.iotplatform.mapper.DeviceServiceMapper;
 import com.iotplatform.mapper.NotifyMapper;
+import com.iotplatform.mapper.ServiceInfoMapper;
+import com.iotplatform.model.DeviceServiceSub;
+import com.iotplatform.model.ServiceInfoSub;
 import com.iotplatform.service.PushMessageReceiverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName PushMessageReceiverServiceImpl
@@ -27,6 +31,8 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     private NotifyMapper notifyMapper;
     @Autowired
     private DeviceServiceMapper deviceServiceMapper;
+    @Autowired
+    private ServiceInfoMapper serviceInfoMapper;
 
     @Override
     public void handleBody(String body) {
@@ -58,19 +64,17 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
         System.out.println("deviceInfoChanged ==> " + body);
         //TODO deal with DeviceInfoChanged notification  写入数据库
         insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
-        DeviceInfo deviceInfo = deviceInfoMapper.selectByDeviceId(body.getDeviceId());
+        DeviceInfo deviceInfo = deviceInfoMapper.selectByDeviceId(body.getDeviceInfo().getNodeId());
         deviceInfoMapper.insertChangeSelective(body.getDeviceInfo());
-        if(deviceInfo==null){
-            DeviceInfo deviceInfo1=new DeviceInfo();
-            deviceInfo1.setDeviceId(body.getDeviceId());
-            deviceInfoMapper.insertSelective(body.getDeviceInfo());
-        }else{
+        if (deviceInfo == null) {
+            deviceInfoMapper.insert(body.getDeviceInfo());
+        } else {
             DeviceInfo deviceInfo1 = body.getDeviceInfo();
-            deviceInfo1.setId(deviceInfo.getId());
             deviceInfoMapper.updateByPrimaryKeySelective(deviceInfo1);
         }
 
     }
+
     //消息通知类型添加到数据库
     private void insertNotify(String deviceId, String gatewayId, String notifyType) {
         Notify notify = new Notify();
@@ -85,23 +89,35 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     @Override
     public void handleDeviceDataChanged(NotifyDeviceDataChangedDTO body) {
         insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
-        //TODO 写入数据库
         System.out.println("deviceDataChanged ==> " + body);
-        DeviceService service=new DeviceService();
+        DeviceServiceSub service = new DeviceServiceSub();
+        service.setServiceId(body.getService().getServiceId());
         service.setCreateTime(new Date());
         service.setUpdateTime(new Date());
         service.setData(body.getService().getData());
+        if(body.getService().getData()!=null){
+            service.setDataStr(body.getService().getData().toString());
+        }
         service.setDeviceId(body.getDeviceId());
         service.setEventTime(body.getService().getEventTime());
-        service.setServiceInfo(body.getService().getServiceInfo());
         service.setServiceType(body.getService().getServiceType());
         deviceServiceMapper.insert(service);
+        if (null != body.getService().getServiceInfo()) {
+            ServiceInfoSub serviceInfo = new ServiceInfoSub();
+            serviceInfo.setServiceId(service.getServiceId());
+            serviceInfoMapper.insertSelective(serviceInfo);
+        }
     }
 
     @Override
     public void handleDeviceDatasChanged(NotifyDeviceDatasChangedDTO body) {
         insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
         System.out.println("deviceDatasChanged ==> " + body);
+        List<DeviceService> service=body.getServices();
+        for (int i = 0; i < service.size(); i++) {
+
+        }
+
     }
 
     @Override

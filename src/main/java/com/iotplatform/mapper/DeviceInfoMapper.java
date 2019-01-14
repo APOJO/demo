@@ -20,7 +20,7 @@ public interface DeviceInfoMapper {
 
     DeviceInfo selectByPrimaryKey(Integer id);
 
-    DeviceInfo selectByDeviceId(String deviceId);
+    DeviceInfo selectByDeviceId(String nodeId);
 
     int updateByPrimaryKeySelective(DeviceInfo record);
 

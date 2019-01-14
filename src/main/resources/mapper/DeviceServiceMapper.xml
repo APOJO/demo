@@ -8,16 +8,15 @@
     <result column="event_time" property="eventTime" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="servie_info" property="servieInfo" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.iotplatform.client.dto.DeviceService" extends="BaseResultMap" >
-    <result column="data" property="data" jdbcType="LONGVARCHAR" />
+    <result column="data" property="dateStr" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, service_id, service_type, event_time, create_time, update_time, servie_info
+    id, service_id, service_type, event_time, create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
-    data
+    `data`
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select
@@ -31,13 +30,13 @@
     delete from device_service
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.iotplatform.client.dto.DeviceService" >
+  <insert id="insert" parameterType="com.iotplatform.model.DeviceServiceSub" >
     insert into device_service (id, service_id, service_type, 
       event_time, create_time, update_time, 
-      servie_info, data)
+       `data`)
     values (#{id,jdbcType=INTEGER}, #{serviceId,jdbcType=VARCHAR}, #{serviceType,jdbcType=VARCHAR}, 
       #{eventTime,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-      #{servieInfo,jdbcType=VARCHAR}, #{data,jdbcType=LONGVARCHAR})
+      #{dataStr,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.iotplatform.client.dto.DeviceService" >
     insert into device_service
@@ -60,11 +59,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="servieInfo != null" >
-        servie_info,
-      </if>
+
       <if test="data != null" >
-        data,
+          `data`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -86,11 +83,9 @@
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="servieInfo != null" >
-        #{servieInfo,jdbcType=VARCHAR},
-      </if>
+
       <if test="data != null" >
-        #{data,jdbcType=LONGVARCHAR},
+        #{dataStr,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -112,11 +107,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="servieInfo != null" >
-        servie_info = #{servieInfo,jdbcType=VARCHAR},
-      </if>
+
       <if test="data != null" >
-        data = #{data,jdbcType=LONGVARCHAR},
+        `data` = #{dataStr,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -128,8 +121,7 @@
       event_time = #{eventTime,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      servie_info = #{servieInfo,jdbcType=VARCHAR},
-      data = #{data,jdbcType=LONGVARCHAR}
+      `data`= #{dataStr,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.iotplatform.client.dto.DeviceService" >
@@ -139,7 +131,7 @@
       event_time = #{eventTime,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      servie_info = #{servieInfo,jdbcType=VARCHAR}
+      `data`= #{dataStr,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

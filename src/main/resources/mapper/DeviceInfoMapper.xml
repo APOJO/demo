@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.iotplatform.mapper.DeviceInfoMapper" >
     <resultMap id="BaseResultMap" type="com.iotplatform.client.dto.DeviceInfo" >
-        <id column="id" property="id" jdbcType="INTEGER" />
         <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
         <result column="node_id" property="nodeId" jdbcType="VARCHAR" />
         <result column="name" property="name" jdbcType="VARCHAR" />
@@ -29,7 +28,7 @@
         <result column="battery_level" property="batteryLevel" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-    id, device_id, node_id, name, description, manufacturer_id, manufacturer_name, mac,
+     device_id, node_id, name, description, manufacturer_id, manufacturer_name, mac,
     location, device_type, model, sw_version, fw_version, hw_version, protocol_type,
     bridge_id, status, status_detail, mute, supported_security, is_security, signal_strength,
     sig_version, serial_number, battery_level
@@ -46,14 +45,14 @@
         select
         <include refid="Base_Column_List" />
         from device_info
-        where device_id = #{deviceId,jdbcType=VARCHAR}
+        where node_id = #{nodeId,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from device_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.iotplatform.client.dto.DeviceInfo" >
-    insert into device_info (id, device_id, node_id,
+    insert into device_info ( node_id,
       name, description, manufacturer_id,
       manufacturer_name, mac, location,
       device_type, model, sw_version,
@@ -62,7 +61,7 @@
       mute, supported_security, is_security,
       signal_strength, sig_version, serial_number,
       battery_level)
-    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR},
+    values ( #{nodeId,jdbcType=VARCHAR},
       #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{manufacturerId,jdbcType=VARCHAR},
       #{manufacturerName,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR},
       #{deviceType,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{swVersion,jdbcType=VARCHAR},
@@ -75,12 +74,8 @@
     <insert id="insertSelective" parameterType="com.iotplatform.client.dto.DeviceInfo" >
         insert into device_info
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
-                id,
-            </if>
-            <if test="deviceId != null" >
-                device_id,
-            </if>
+
+
             <if test="nodeId != null" >
                 node_id,
             </if>
@@ -152,12 +147,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
-                #{id,jdbcType=INTEGER},
-            </if>
-            <if test="deviceId != null" >
-                #{deviceId,jdbcType=VARCHAR},
-            </if>
+
+
             <if test="nodeId != null" >
                 #{nodeId,jdbcType=VARCHAR},
             </if>
@@ -305,7 +296,7 @@
                 battery_level = #{batteryLevel,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER}
+        where node_id = #{nodeId,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.iotplatform.client.dto.DeviceInfo" >
     update device_info
@@ -360,9 +351,7 @@
     <insert id="insertChangeSelective" parameterType="com.iotplatform.client.dto.DeviceInfo" >
         insert into device_info_change
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
-                id,
-            </if>
+
             <if test="nodeId != null" >
                 node_id,
             </if>
@@ -434,9 +423,7 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
-                #{id,jdbcType=INTEGER},
-            </if>
+
             <if test="nodeId != null" >
                 #{nodeId,jdbcType=VARCHAR},
             </if>

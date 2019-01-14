@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iotplatform.mapper.DeviceManageMapper" >
+    <resultMap id="BaseResultMap" type="com.iotplatform.model.Device" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+        <result column="timeout" property="timeout" jdbcType="INTEGER" />
+        <result column="psk" property="psk" jdbcType="VARCHAR" />
+        <result column="verify_code" property="verifyCode" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="node_id" property="nodeId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    id, device_id, timeout, psk, verify_code, update_time, create_time, node_id
+  </sql>
+
+
+    <select id="selectByDeviceId" resultType="com.iotplatform.model.Device">
+    select
+    <include refid="Base_Column_List" />
+    from device where device_id=#{deviceId}
+    </select>
+
+    <insert id="insertRegDirectDeviceOutDTO">
+        INSERT INTO device(device_id,psk,verify_code,create_time)
+        VALUES (#{deviceId},#{psk},#{verifyCode},sysdate())
+    </insert>
+
+    <update id="updateDevice">
+        update device
+        <set >
+            <if test="deviceId != null" >
+                device_id = #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="timeout != null" >
+                timeout = #{timeout,jdbcType=INTEGER},
+            </if>
+            <if test="psk != null" >
+                psk = #{psk,jdbcType=VARCHAR},
+            </if>
+            <if test="verifyCode != null" >
+                verify_code = #{verifyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="nodeId != null" >
+                node_id = #{nodeId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteDeviceById">
+        delete from device where device_id=#{deviceId}
+    </delete>
+</mapper>

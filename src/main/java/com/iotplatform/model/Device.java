@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class Device implements Serializable {
     //主键自增id
-    private Long id;
+    private Integer id;
     //设备ID，用于唯一标识一个设备。
     private String deviceId;
     //验证码，设备可以通过验证码获取设备ID和密码。
@@ -27,11 +27,11 @@ public class Device implements Serializable {
     //修改时间
     private Date updateTime;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

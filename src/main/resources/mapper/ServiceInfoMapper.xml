@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iotplatform.mapper.ServiceInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.iotplatform.model.ServiceInfoSub" >
+    <result column="muteCmds" property="mutecmds" jdbcType="VARCHAR" />
+    <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.iotplatform.model.ServiceInfoSub" >
+    insert into service_info (muteCmds, service_id)
+    values (#{mutecmds,jdbcType=VARCHAR}, #{service_id,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iotplatform.model.ServiceInfoSub" >
+    insert into service_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mutecmds != null" >
+        muteCmds,
+      </if>
+      <if test="serviceId != null" >
+        serviceId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mutecmds != null" >
+        #{mutecmds,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
