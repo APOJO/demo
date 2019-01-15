@@ -64,11 +64,15 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
         System.out.println("deviceInfoChanged ==> " + body);
         //TODO deal with DeviceInfoChanged notification  写入数据库
         insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
+        //根据设备nodeId查找设备
         DeviceInfo deviceInfo = deviceInfoMapper.selectByDeviceId(body.getDeviceInfo().getNodeId());
+        //添加一条变更记录
         deviceInfoMapper.insertChangeSelective(body.getDeviceInfo());
         if (deviceInfo == null) {
+            //如果设备没找到就添加一条数据
             deviceInfoMapper.insert(body.getDeviceInfo());
         } else {
+            //修改设备信息，更新数据库
             DeviceInfo deviceInfo1 = body.getDeviceInfo();
             deviceInfoMapper.updateByPrimaryKeySelective(deviceInfo1);
         }
@@ -90,6 +94,7 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     public void handleDeviceDataChanged(NotifyDeviceDataChangedDTO body) {
         insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
         System.out.println("deviceDataChanged ==> " + body);
+        //将设备信息转换
         DeviceServiceSub service = new DeviceServiceSub();
         service.setServiceId(body.getService().getServiceId());
         service.setCreateTime(new Date());
@@ -101,7 +106,9 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
         service.setDeviceId(body.getDeviceId());
         service.setEventTime(body.getService().getEventTime());
         service.setServiceType(body.getService().getServiceType());
+        //将信息写入数据库
         deviceServiceMapper.insert(service);
+        //判断有无设备服务信息。有则入库
         if (null != body.getService().getServiceInfo()) {
             ServiceInfoSub serviceInfo = new ServiceInfoSub();
             serviceInfo.setServiceId(service.getServiceId());
@@ -113,10 +120,7 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     public void handleDeviceDatasChanged(NotifyDeviceDatasChangedDTO body) {
         insertNotify(body.getDeviceId(), body.getGatewayId(), body.getNotifyType());
         System.out.println("deviceDatasChanged ==> " + body);
-        List<DeviceService> service=body.getServices();
-        for (int i = 0; i < service.size(); i++) {
 
-        }
 
     }
 
