@@ -1,5 +1,6 @@
 package com.iotplatform.service.impl;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.iotplatform.client.dto.*;
 import com.iotplatform.mapper.DeviceInfoMapper;
 import com.iotplatform.mapper.DeviceServiceMapper;
@@ -7,12 +8,14 @@ import com.iotplatform.mapper.NotifyMapper;
 import com.iotplatform.mapper.ServiceInfoMapper;
 import com.iotplatform.model.DeviceServiceSub;
 import com.iotplatform.model.ServiceInfoSub;
+import com.iotplatform.model.testDEV;
+import com.iotplatform.service.DeviceManageService;
 import com.iotplatform.service.PushMessageReceiverService;
+import com.iotplatform.vms.VmsDemo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName PushMessageReceiverServiceImpl
@@ -33,6 +36,8 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
     private DeviceServiceMapper deviceServiceMapper;
     @Autowired
     private ServiceInfoMapper serviceInfoMapper;
+    @Autowired
+    private DeviceManageService deviceManageService;
 
     @Override
     public void handleBody(String body) {
@@ -113,6 +118,55 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
             ServiceInfoSub serviceInfo = new ServiceInfoSub();
             serviceInfo.setServiceId(service.getServiceId());
             serviceInfoMapper.insertSelective(serviceInfo);
+        }
+        //判断报警
+        System.out.println("===========serviceType="+body.getService().getServiceType()+"============");
+        System.out.println("============serviceDataStr="+body.getService().getData().toString()+"============");
+        System.out.println("============报警判断="+(body.getService().getServiceType().equals("BizType")&&body.getService().getData().toString().equals("{\"Biz_Type\":1,\"BizData\":1}"))+"============");
+        if (body.getService().getServiceType().equals("BizType")&&body.getService().getData().toString().equals("{\"Biz_Type\":1,\"BizData\":1}")) {
+            System.out.println("=============进入报警==================");
+            call(body);
+            System.out.println("=============完成报警==================");
+        }
+
+    }
+
+    /**
+     * PushMessageReceiverServiceImpl
+     * @author  Arlen
+     * @date    2019/1/22 13:12
+     * @params
+     * @return
+     */
+    private void call(NotifyDeviceDataChangedDTO body) {
+        //创建报警通知对象
+        ArrayList<testDEV> testDEVS = new ArrayList<>();
+        testDEVS.add(new testDEV("贾彬彬", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15614175320"}, "天滋嘉鲤商务中心A座1403厨房"));
+
+        for (testDEV td:
+             testDEVS) {
+            //通知指定用户
+            if (td.getDevID().equals(body.getDeviceId())) {
+                System.out.println("---------START-------开始通知"+td.getUserName()+",电话"+td.getPhoneList()[0]+"--------------------");
+                try {
+                    //拼装外呼信息
+                    String showNumber = "031166857110";
+                    String number = td.getPhoneList()[0];
+                    String ttsID = "TTS_112470691";
+                    HashMap<String, Object> templateParam = new HashMap<>();
+                    templateParam.put("police_type", "燃气");
+                    templateParam.put("address", td.getAddr());
+                    //调用外呼方法
+                    try {
+                        new VmsDemo().call(showNumber, number, ttsID, templateParam);
+                        System.out.println("-----------END-----完成对"+td.getUserName()+"的通知,通知电话为"+td.getPhoneList()[0]+"--------------------");
+                    } catch (ClientException e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

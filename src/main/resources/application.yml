@@ -17,9 +17,9 @@ spring:
     time-zone: GMT+8
     default-property-inclusion: NON_NULL
   datasource:
-    url: jdbc:mysql://182.61.48.200/telecom?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://39.106.134.138:3306/xiaofang_liumingfang?useUnicode=true&characterEncoding=utf-8
     username: root
-    password: qdc#@&oiwedadf##%WUIQ
+    password: ArlenAndFlyingTiger_117915
     driver-class-name: com.mysql.jdbc.Driver
 
 mybatis:
