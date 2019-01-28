@@ -139,9 +139,21 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
      * @return
      */
     private void call(NotifyDeviceDataChangedDTO body) {
+        //获取注册设备信息 设备编号等
+
         //创建报警通知对象
         ArrayList<testDEV> testDEVS = new ArrayList<>();
-        testDEVS.add(new testDEV("贾彬彬", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15614175320"}, "天滋嘉鲤商务中心A座1403厨房"));
+        testDEVS.add(new testDEV("贾彬彬", "f511f319-9dc7-4e05-bf74-9fdcf59cf258", new String[]{"15614175320"}, "天滋嘉鲤商务中心A座1403厨房"));
+        testDEVS.add(new testDEV("王磊", "f511f319-9dc7-4e05-bf74-9fdcf59cf258", new String[]{"15032865101"}, "创新大厦5楼"));
+//       用户数据
+//        testDEVS.add(new testDEV("宫连巧", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15373969682","17743786925"}, "兴顺路24号"));
+//        testDEVS.add(new testDEV("宫海云", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15373631839"}, "富强三巷13号"));
+//        testDEVS.add(new testDEV("宫文亮", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13703219367"}, "丁香路19号"));
+//        testDEVS.add(new testDEV("吴风路", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13073109528","13930103233"}, "平和路19号"));
+//        testDEVS.add(new testDEV("金立峰", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15033725602","18132058536"}, "兴顺路13号"));
+//        testDEVS.add(new testDEV("王充献", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13933166088","15100319996"}, "文明路29号"));
+//        testDEVS.add(new testDEV("张雪霞", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15830685796","17367735796"}, "同盟路23号"));
+//        testDEVS.add(new testDEV("王卫国", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13785194811","13315959756"}, "无影山巷11号"));
 
         for (testDEV td:
              testDEVS) {
