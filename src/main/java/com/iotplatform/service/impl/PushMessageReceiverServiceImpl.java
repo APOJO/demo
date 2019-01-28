@@ -146,14 +146,20 @@ public class PushMessageReceiverServiceImpl implements PushMessageReceiverServic
         testDEVS.add(new testDEV("贾彬彬", "f511f319-9dc7-4e05-bf74-9fdcf59cf258", new String[]{"15614175320"}, "天滋嘉鲤商务中心A座1403厨房"));
         testDEVS.add(new testDEV("王磊", "f511f319-9dc7-4e05-bf74-9fdcf59cf258", new String[]{"15032865101"}, "创新大厦5楼"));
 //       用户数据
-//        testDEVS.add(new testDEV("宫连巧", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15373969682","17743786925"}, "兴顺路24号"));
-//        testDEVS.add(new testDEV("宫海云", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15373631839"}, "富强三巷13号"));
-//        testDEVS.add(new testDEV("宫文亮", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13703219367"}, "丁香路19号"));
-//        testDEVS.add(new testDEV("吴风路", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13073109528","13930103233"}, "平和路19号"));
-//        testDEVS.add(new testDEV("金立峰", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15033725602","18132058536"}, "兴顺路13号"));
-//        testDEVS.add(new testDEV("王充献", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13933166088","15100319996"}, "文明路29号"));
-//        testDEVS.add(new testDEV("张雪霞", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15830685796","17367735796"}, "同盟路23号"));
-//        testDEVS.add(new testDEV("王卫国", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"13785194811","13315959756"}, "无影山巷11号"));
+        testDEVS.add(new testDEV("宫连巧", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"15373969682","17743786925"}, "兴顺路24号"));
+        testDEVS.add(new testDEV("宫连巧2", "4a0481c2-6e7a-4644-aef6-886daa0ff5af", new String[]{"17743786925"}, "兴顺路24号"));
+        testDEVS.add(new testDEV("宫海云", "62b02808-40a6-4713-b6c7-18ac590225a5", new String[]{"15373631839"}, "富强三巷13号"));
+        testDEVS.add(new testDEV("宫文亮", "2ab635ef-41b7-49ac-8b92-e9414cf21e2c", new String[]{"13703219367"}, "丁香路19号"));
+        testDEVS.add(new testDEV("吴风路", "b22e2170-a559-4e2c-9da1-ebcbbf77d693", new String[]{"13073109528","13930103233"}, "平和路19号"));
+        testDEVS.add(new testDEV("吴风路2", "b22e2170-a559-4e2c-9da1-ebcbbf77d693", new String[]{"13930103233"}, "平和路19号"));
+        testDEVS.add(new testDEV("金立峰", "d66fb0c6-37e1-46de-8f77-90fd2c553dd4", new String[]{"15033725602","18132058536"}, "兴顺路13号"));
+        testDEVS.add(new testDEV("金立峰2", "d66fb0c6-37e1-46de-8f77-90fd2c553dd4", new String[]{"18132058536"}, "兴顺路13号"));
+        testDEVS.add(new testDEV("王充献", "5588f4af-945b-4cd5-a509-f9f0b7ba464d", new String[]{"13933166088","15100319996"}, "文明路29号"));
+        testDEVS.add(new testDEV("王充献2", "5588f4af-945b-4cd5-a509-f9f0b7ba464d", new String[]{"15100319996"}, "文明路29号"));
+        testDEVS.add(new testDEV("张雪霞", "89c814a2-4879-41fd-a572-c5a992e4b07d", new String[]{"15830685796","17367735796"}, "同盟路23号"));
+        testDEVS.add(new testDEV("张雪霞2", "89c814a2-4879-41fd-a572-c5a992e4b07d", new String[]{"17367735796"}, "同盟路23号"));
+        testDEVS.add(new testDEV("王卫国", "6bc40132-63fd-4a16-a0d6-a167ba1e6df2", new String[]{"13785194811","13315959756"}, "无影山巷11号"));
+        testDEVS.add(new testDEV("王卫国2", "6bc40132-63fd-4a16-a0d6-a167ba1e6df2", new String[]{"13315959756"}, "无影山巷11号"));
 
         for (testDEV td:
              testDEVS) {
